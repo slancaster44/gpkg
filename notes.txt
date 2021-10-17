@@ -1,0 +1,78 @@
+Directory Structure
+    <package_name>.gpkg
+        pkginfo.json
+        build.sh
+        post.sh 
+        buildnotes.txt
+        tarball.tar.*
+        dependancies
+
+File Definitions:
+    -- pkginfo.json --
+        Will contain, package version, description, and package_name
+        and the names of dependancies. This file will also list dependancies
+
+    -- build.sh --
+        A complete build script, describing the build process
+        2) Dependancies will not be installed by this script
+
+
+    -- package tarball --
+        Default upstream tarball
+
+    -- Dependancies --
+        All dependancies will be stored here is gpkg files. However, they will only be installed
+        if the dependancies do not already exist on the system
+    
+    -- pre.sh --
+        will be run as root before package installation and should contain preparation
+        commands 
+
+    -- post.sh --
+        will be run as root after package installation and should contain configuration
+        commands
+
+    -- buildnotes.txt --
+        will contain any notes that the packager wishes the end user to have
+
+Goals
+    1) To install a package to a package-specific user
+
+    2) /home of package-specific user will contain a copy
+    of the tarball, build script, package-locations file and package info
+
+    3) Be able to list all the files of a program by listing the files owned
+    by the package-specific user
+
+    4) Being able to remove a file in complete as well as any unused dependancies 
+
+    5) Output an end message containing notes on any irregularities during installation
+
+    6) Execute an initial setup script that will:
+        a) Create install group
+        b) Give install permissions to group of install folders
+
+Notes
+    1) Dependancies must be installed before a package is installed
+
+Commands:
+    install :: installs given package
+    remove  :: removes given package
+    list    :: lists files associated with given program
+    Clean   :: cleans out unused dependancies
+
+Process
+    A) Installation Process
+        1) Ensure command has been given root permissions
+        2) Create package-specific user
+        3) Give package-specific user proper file-overwrite permissions
+        4) Untar tarball
+        5) Run pre.sh
+        6) cd into tarball
+        7) Switch to package-specific user
+        8) Run package install script
+        9) Switch back to root
+        10) Run post.sh
+        11) Exit process
+    B) Removal Process
+    C) Dependancy Clean Up Process
