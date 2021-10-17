@@ -1,9 +1,27 @@
 import os
 import json
+import tarfile
 
 class Package:
     def __init__(self, directory):
         os.chdir(directory)
+
+        self.buildShLocation = None
+        self.tarballLocation = None
+        self.preShLocation = None
+        self.postShLocation = None
+
+        self.pkgInfoLocation = None
+        self.pkgInfoJson = None
+        self.name = None
+        self.version = None
+        self.description = None
+        self.depends = None
+        self.dependsDir = None
+        self.dependsPkgs = None
+
+        self.extractedTarballLocation = None
+
         self.directoryLocation = directory
         self.pkgContents = os.listdir()
 
@@ -14,7 +32,7 @@ class Package:
         self.extractPkgInfo()
 
         ## Get build.sh ##
-        buildShLocation = self.directoryLocation + "/build.sh"
+        self.buildShLocation = self.directoryLocation + "/build.sh"
 
         ## Get tarball ##
         if "tarball.tar.xz" in self.pkgContents:
@@ -24,23 +42,16 @@ class Package:
         else:
             sys.exit("No tarball found in package")
 
-        print(self.tarballLocation)
-        
-
     def getMightHaves(self):
         ## Get Dependencies ##
         self.extractDependencies()
 
         ## Get pre.sh ##
         if "pre.sh" in self.pkgContents:
-            self.preSh = self.directoryLocation + "/pre.sh"
-        else:
-            self.preSh = None
+            self.preShLocation = self.directoryLocation + "/pre.sh"
         ## Get post.sh ##
         if "post.sh" in self.pkgContents:
-            self.postSh = self.directoryLocation + "/post.sh"
-        else:
-            self.postSh = None
+            self.postShLocation = self.directoryLocation + "/post.sh"
 
     def extractPkgInfo(self):
         self.pkgInfoLocation = self.directoryLocation + "/pkginfo.json"
@@ -60,6 +71,21 @@ class Package:
             self.dependsDir = None
             self.dependsPkgs = []
 
+    def unTar(self):
+        dirContentsBefore = os.listdir()
+
+        tar = tarfile.open(name=self.tarballLocation, mode='r')
+        tar.extractall(path=".", members=None)
+
+        dirContentsAfter = os.listdir()
+        for i in dirContentsAfter:
+            if not i in dirContentsBefore:
+                self.extractedTarballLocation = i
+
+        tar.close()
+
+    def runPreSh(self):
+        pass #TODO: Implement Pre-Sh
 
 class Dependency(Package):
     def __init__(self, parentPkg, dir):

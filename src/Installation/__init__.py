@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess
 from zipfile import ZipFile
+import tarfile
 
 import Pkg
 import UserMgmt
@@ -26,12 +27,26 @@ def unzipPkg():
 def getPkgAsObj():
     return Pkg.Package(tmpLocation)
 
+def failOut(pkgName, message):
+    removeTmpEnv()
+    UserMgmt.rmUser(pkgName)
+    sys.exit(message)
+
 def install(pkgLocation):
     createTmpEnv(pkgLocation)
     unzipPkg()
+
+
     pkgObj = getPkgAsObj()
 
-    UserMgmt.addUser(pkgObj.name)
+    print("Decompressing package tarball... ")
+    pkgObj.unTar()
+    print("\tDone")
 
+    os.chdir(pkgObj.extractedTarballLocation)
+    print(os.listdir())
+
+    if pkgObj.preShLocation != None:
+        pkgObj.runPreSh()
 
     removeTmpEnv()

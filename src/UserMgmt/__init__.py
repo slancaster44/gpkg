@@ -1,8 +1,11 @@
 import subprocess
 import sys
 
-def addUser(pkgName):
+def addUser(name):
     subprocess.run(["useradd", "-g", "install", "-m", name])
+
+def rmUser(name):
+    subprocess.run(["userdel", "-r", name])
 
 def addInstallGroup():
     addGroup("install")
