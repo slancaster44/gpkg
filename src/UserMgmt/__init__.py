@@ -1,15 +1,44 @@
 import subprocess
 import sys
+import pwd
+import os
 
-def addUser(name):
+## Get Current User Data ##
+curUserData = pwd.getpwuid(os.getuid())
+##
+
+
+def mkUser(name):
     subprocess.run(["useradd", "-g", "install", "-m", name])
+    print("[UserMgmt] Added package-specific user")
 
 def rmUser(name):
-    subprocess.run(["userdel", "-r", name])
+    subprocess.call(["userdel", "-r", name])
+    print("[UserMgmt] Removed package-specific user")
+    print("\tNote: Above 'mail spool not found' error expected")
+
+def chUser(name):
+    userData = pwd.getpwnam(name)
+    guid = userData[3]
+    uid = userData[2]
+
+    os.setegid(guid)
+    os.seteuid(uid)
+    print("[UserMgmt] Switched to package-specific user")
+
+def logout():
+    guid = curUserData[3]
+    uid = curUserData[2]
+    os.setegid(guid)
+    os.seteuid(uid)
+    print("[UserMgmt] Switched to root user")
 
 def addInstallGroup():
     addGroup("install")
+    print("[UserMgmt] Created 'install' group")
     givePermissions("install")
+    print("[UserMgmt] Gave 'install' group proper permissions")
+    print("\tNote: All 'cannot access <file>: No such file or directory' messages expected")
 
 def givePermissions(group):
     # Add valid install directories

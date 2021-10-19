@@ -87,6 +87,12 @@ class Package:
     def runPreSh(self):
         pass #TODO: Implement Pre-Sh
 
+    def runBuildSh(self):
+        pass #TODO: Implement build-sh
+
+    def runPostSh(self):
+        pass #TODO: Implement post-sh
+
 class Dependency(Package):
     def __init__(self, parentPkg, dir):
         super.__init__(dir)

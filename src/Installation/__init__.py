@@ -44,9 +44,20 @@ def install(pkgLocation):
     print("\tDone")
 
     os.chdir(pkgObj.extractedTarballLocation)
-    print(os.listdir())
+
 
     if pkgObj.preShLocation != None:
         pkgObj.runPreSh()
+
+    UserMgmt.mkUser(pkgObj.name)
+    UserMgmt.chUser(pkgObj.name)
+
+    pkgObj.runBuildSh()
+
+    UserMgmt.logout()
+
+
+
+    UserMgmt.rmUser(pkgObj.name)
 
     removeTmpEnv()

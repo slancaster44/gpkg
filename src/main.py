@@ -5,7 +5,7 @@ import os
 
 import UserMgmt
 import Installation
-from PkgCreation import creator
+import PkgCreation
 
 
 parser = argparse.ArgumentParser(description='gpkg Package Manager')
@@ -53,7 +53,7 @@ def init():
 
 def build(pkg):
     name = os.path.basename(pkg)
-    creator.mkPkgFrom(name, os.path.abspath(pkg))
+    PkgCreation.mkPkgFrom(name, os.path.abspath(pkg))
 
 if __name__ == '__main__':
     if os.getuid() != 0:
