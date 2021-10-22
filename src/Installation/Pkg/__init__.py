@@ -1,6 +1,8 @@
 import os
 import json
 import tarfile
+import subprocess
+import glob
 
 class Package:
     def __init__(self, directory):
@@ -72,26 +74,39 @@ class Package:
             self.dependsPkgs = []
 
     def unTar(self):
-        dirContentsBefore = os.listdir()
 
         tar = tarfile.open(name=self.tarballLocation, mode='r')
-        tar.extractall(path=".", members=None)
+        tar.extractall(path="", members=None)
 
-        dirContentsAfter = os.listdir()
-        for i in dirContentsAfter:
-            if not i in dirContentsBefore:
-                self.extractedTarballLocation = i
+        self.extractedTarballLocation = self.directoryLocation +"/"+\
+        max(
+            glob.glob(os.path.join(".", "*/")),
+            key=os.path.getmtime
+        )
 
         tar.close()
 
+
+    def runShAsPkgUser(self, file):
+        subprocess.run(["chmod", "+x", file])
+        cmd = ["runuser",
+               "-l", self.name,
+               "-c", "cd " + self.extractedTarballLocation + " && " + file]
+        subprocess.run(cmd)
+
+    def runShAsRoot(self, file):
+        subprocess.run(["chmod", "+x", file])
+        os.chdir(self.extractedTarballLocation)
+        subprocess.call([file])
+
     def runPreSh(self):
-        pass #TODO: Implement Pre-Sh
+        self.runShAsRoot(self.preShLocation)
 
     def runBuildSh(self):
-        pass #TODO: Implement build-sh
+        self.runShAsPkgUser(self.buildShLocation)
 
     def runPostSh(self):
-        pass #TODO: Implement post-sh
+        self.runShAsRoot(self.postShLocation)
 
 class Dependency(Package):
     def __init__(self, parentPkg, dir):

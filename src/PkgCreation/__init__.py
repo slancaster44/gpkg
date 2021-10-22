@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import json
+import re
 
 def mkPkgFrom(name, directory):
     pkgBuilder = PackageBuilder(name, directory)
@@ -24,6 +25,8 @@ class PackageBuilder:
     # pre.sh
     # post.sh
     def checkDirectory(self):
+        if not os.path.isdir(self.directory):
+            sys.exit("Folder does not exist: " +self.directory)
         os.chdir(self.directory)
         filesOfDir = os.listdir()
 
@@ -55,3 +58,6 @@ class PackageBuilder:
                 sys.exit("Required value missing from 'pkginfo.json: " + value)
             else:
                 continue
+
+        if not bool(re.match("^[a-z_]([a-z0-9_-]{0,31}|[a-z0-9_-]{0,30}\$)$", self.jsonContents["name"])):
+            sys.exit("Invalid name in pkginfo.json: name must be valid linux username")

@@ -6,6 +6,8 @@ import os
 import UserMgmt
 import Installation
 import PkgCreation
+import Listing
+import Removal
 
 
 parser = argparse.ArgumentParser(description='gpkg Package Manager')
@@ -36,13 +38,14 @@ def install(pkg):
     Installation.install(os.path.abspath(pkg))
 
 def remove(pkg):
-    print("Removing", pkg)
+    Removal.remove(pkg)
 
 def clean():
     print("Removing unused dependencies")
 
 def list(pkg):
-    print("Listing", pkg)
+    pkgInfo = Listing.getInfoFor(pkg)
+    print(pkgInfo)
 
 def init():
     shouldContinue = input("This may only be executed upon first run of gpkg. Continue? (y/N) ")
@@ -56,10 +59,12 @@ def build(pkg):
     PkgCreation.mkPkgFrom(name, os.path.abspath(pkg))
 
 if __name__ == '__main__':
+    args = parser.parse_args()
+
     if os.getuid() != 0:
+        parser.print_help()
         sys.exit("Must run gpkg as root")
 
-    args = parser.parse_args()
     if args.inPkg != None:
         install(args.inPkg)
     elif args.rmPkg != None:
@@ -73,4 +78,4 @@ if __name__ == '__main__':
     elif args.init:
         init()
     else:
-        sys.exit("No valid arguments")
+       sys.exit("No valid arguments")

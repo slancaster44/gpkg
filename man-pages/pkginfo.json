@@ -1,6 +1,0 @@
-{
-    "name":"man-pages",
-    "version":"5.13", 
-    "description":"Contains Linux man page sections 1-8",
-    "dependencies":null
-}

@@ -3,9 +3,12 @@ import shutil
 import subprocess
 from zipfile import ZipFile
 import tarfile
+import sys
 
-import Pkg
+import Installation.Pkg as Pkg
 import UserMgmt
+
+
 
 uniqueID = "gpkg" + str(os.getpid())
 tmpLocation = "/tmp/" + uniqueID
@@ -33,31 +36,43 @@ def failOut(pkgName, message):
     sys.exit(message)
 
 def install(pkgLocation):
+    if not os.path.isfile(pkgLocation) and \
+        pkgLocation[:-5] != ".gpkg":
+        sys.exit("[Install] File is not gpkg")
+
     createTmpEnv(pkgLocation)
     unzipPkg()
 
 
     pkgObj = getPkgAsObj()
 
-    print("Decompressing package tarball... ")
+    print("[Install] Decompressing package tarball... ")
     pkgObj.unTar()
     print("\tDone")
 
     os.chdir(pkgObj.extractedTarballLocation)
 
-
-    if pkgObj.preShLocation != None:
-        pkgObj.runPreSh()
+    if UserMgmt.doesUserExist(pkgObj.name):
+        removeTmpEnv()
+        print("[Install] Cannot create pkg-specific user for: " + pkgObj.name)
+        sys.exit("\tNote: User already exists")
 
     UserMgmt.mkUser(pkgObj.name)
-    UserMgmt.chUser(pkgObj.name)
+    UserMgmt.givePermissionToUser(pkgObj.name, pkgObj.directoryLocation)
 
+    if pkgObj.preShLocation != None:
+        print("[Install] Running pre-installation script")
+        pkgObj.runPreSh()
+
+    print("[Install] Running build script")
     pkgObj.runBuildSh()
 
-    UserMgmt.logout()
+    if pkgObj.postShLocation != None:
+        print("[Install] Running post-installation script")
+        pkgObj.runPostSh()
 
-
-
-    UserMgmt.rmUser(pkgObj.name)
+    saveLocation = "/home/"+pkgObj.name+"/installation_files"
+    print("[Install] Saving pkg files to:", saveLocation)
+    shutil.copytree(tmpLocation, saveLocation)
 
     removeTmpEnv()
