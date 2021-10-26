@@ -4,6 +4,7 @@ import os
 import json
 import subprocess
 import sys
+import pickle
 
 def getPkgUsers():
     listOfUsers = []
@@ -35,16 +36,15 @@ class PkgInfo:
 
         self.installedFiles = []
         self.getFiles()
+        
+        self.parentPkgs = []
+        self.getParentPkgs()
 
         self.version = None
         self.description = None
         self.pkgInfoJson = None
-        self.dependencyNames = None
+        self.dependends = []
         self.extractJsonInfo()
-
-        self.dependencies = []
-        self.getDepends()
-
 
 
     def __str__(self):
@@ -52,7 +52,8 @@ class PkgInfo:
         out += "Name: " + str(self.name) +"\n"
         out += "Version: " + str(self.version )+ "\n"
         out += "Description: " + str(self.description) + "\n"
-        out += "Dependencies: " + str(self.dependencyNames) + "\n\n"
+        out += "Dependencies: " + str(self.depends) + "\n"
+        out += "Parent Packages: " + str(self.parentPkgs) + "\n\n"
 
         out += "## Associated Files & Directories ##\n"
         for i in self.installedFiles:
@@ -96,10 +97,22 @@ class PkgInfo:
 
             self.version = self.pkgInfoJson["version"]
             self.description = self.pkgInfoJson["description"]
-            self.dependencyNames = self.pkgInfoJson["dependencies"]
-
-    def getDepends(self):
-        pass
+            self.depends = self.pkgInfoJson["dependencies"]
+            
+    def getParentPkgs(self):
+        with open("/usr/share/gpkg/dependencies.p", "rb") as f:
+           while True:
+                try:
+                   item = pickle.load(f)
+                   if item["dependency"] == self.name and \
+                       not item["parentPkg"] in self.parentPkgs: 
+                       self.parentPkgs.append(item["parentPkg"])
+                except EOFError:
+                    break
+                
+    def hasParentPkgs(self):
+        return self.parentPkgs != []
+        
 
 def getInfoFor(pkg):
     print("[Listing] Collecting info for " + pkg)
@@ -109,3 +122,4 @@ def getInfoFor(pkg):
         sys.exit("[Listing] No such package installed: " + pkg)
 
     return PkgInfo(pkgUser)
+

@@ -1,0 +1,6 @@
+{
+    "name": "test-dependency",
+    "version": "0.1.0",
+    "description": "testing for dependency management in gpkg",
+    "dependencies": null
+}

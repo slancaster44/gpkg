@@ -8,6 +8,7 @@ import Installation
 import PkgCreation
 import Listing
 import Removal
+import Init
 
 
 parser = argparse.ArgumentParser(description='gpkg Package Manager')
@@ -19,9 +20,6 @@ parser.add_argument("-R", "--remove",
                     metavar="<pkg_name>",
                     help="Remove given package",
                     dest="rmPkg")
-parser.add_argument("-C", "--clean",
-                    help="Clean dependencies",
-                    action="store_true")
 parser.add_argument("-L", "--list",
                     metavar="<pkg_name>",
                     help="List given packages, or list all packages",
@@ -40,19 +38,12 @@ def install(pkg):
 def remove(pkg):
     Removal.remove(pkg)
 
-def clean():
-    print("Removing unused dependencies")
-
-def list(pkg):
+def listPkg(pkg):
     pkgInfo = Listing.getInfoFor(pkg)
     print(pkgInfo)
 
 def init():
-    shouldContinue = input("This may only be executed upon first run of gpkg. Continue? (y/N) ")
-    if shouldContinue != "y" and shouldContinue != "Y":
-        sys.exit(1)
-
-    UserMgmt.addInstallGroup()
+    Init.initGpkg()
 
 def build(pkg):
     name = os.path.basename(pkg)
@@ -70,11 +61,9 @@ if __name__ == '__main__':
     elif args.rmPkg != None:
         remove(args.rmPkg)
     elif args.lPkg != None:
-        list(args.lPkg)
+        listPkg(args.lPkg)
     elif args.bPkg != None:
         build(args.bPkg)
-    elif args.clean:
-        clean()
     elif args.init:
         init()
     else:

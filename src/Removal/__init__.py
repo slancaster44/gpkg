@@ -3,7 +3,8 @@ import UserMgmt
 
 import shutil
 import os
-
+import sys
+import pickle
 
 def parentDirHasBeenRemoved(removedDirs, item):
     for dir in removedDirs:
@@ -14,11 +15,7 @@ def parentDirHasBeenRemoved(removedDirs, item):
             return True
     return False
 
-
-
-def remove(pkgName):
-    pkgListing = Listing.getInfoFor(pkgName)
-
+def rmAssociatedFiles(pkgListing):
     ## Remove Associated Files ##
     print("[Removal] Removing associated files")
     removedDirectories = []
@@ -33,6 +30,30 @@ def remove(pkgName):
         else:
             shutil.rmtree(item)
             removedDirectories.append(item)
+            
+def rmDependencyListings(pkgListing):
+    f = open("/usr/share/gpkg/dependencies.p", "rb")
+    
+    dependencyListingsNotRemoved = []
+    while True:
+        try:
+            item = pickle.load(f)
+            if item["parentPkg"] != pkgListing.name:
+                dependencyListingsNotRemoved.append(item)
+        except EOFError:
+            break
+    
+    f.close
+    with open("/usr/share/gpkg/dependencies.p", "wb") as f:
+        for i in dependencyListingsNotRemoved:
+            pickle.dump(i, f)
 
-    ## Delete Associated User ##
+def remove(pkgName):
+    pkgListing = Listing.getInfoFor(pkgName)
+    
+    if pkgListing.hasParentPkgs():
+        sys.exit("[Removal] Cannot remove this package, packages depend on it: " + str(pkgListing.parentPkgs))
+
+    rmAssociatedFiles(pkgListing)
+    rmDependencyListings(pkgListing)
     UserMgmt.rmUser(pkgListing.name)

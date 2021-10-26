@@ -3,6 +3,10 @@ import json
 import tarfile
 import subprocess
 import glob
+import pickle
+import sys
+
+import Listing
 
 class Package:
     def __init__(self, directory):
@@ -18,9 +22,7 @@ class Package:
         self.name = None
         self.version = None
         self.description = None
-        self.depends = None
-        self.dependsDir = None
-        self.dependsPkgs = None
+        self.depends = []
 
         self.extractedTarballLocation = None
 
@@ -45,9 +47,6 @@ class Package:
             sys.exit("No tarball found in package")
 
     def getMightHaves(self):
-        ## Get Dependencies ##
-        self.extractDependencies()
-
         ## Get pre.sh ##
         if "pre.sh" in self.pkgContents:
             self.preShLocation = self.directoryLocation + "/pre.sh"
@@ -65,14 +64,6 @@ class Package:
         self.description = self.pkgInfoJson["description"]
         self.depends = self.pkgInfoJson["dependencies"]
 
-    def extractDependencies(self):
-        if "dependencies" in self.pkgContents:
-            self.dependsDir = self.directoryLocation + "/dependencies"
-            self.dependsPkgs = [] ##TODO: Add in support for dependencies
-        else:
-            self.dependsDir = None
-            self.dependsPkgs = []
-
     def unTar(self):
 
         tar = tarfile.open(name=self.tarballLocation, mode='r')
@@ -85,6 +76,32 @@ class Package:
         )
 
         tar.close()
+        
+    def checkDepends(self):
+        missingDependencies = []
+    
+        #IF there are no dependancies
+        if self.depends == None:
+            return
+        
+        for i in self.depends:
+            if Listing.findPkgUserFor(i) == None:
+                missingDependencies.append(i)
+                
+        if len(missingDependencies) != 0:
+            print("[Install] The following dependancies are missing: ")
+            print("\t" + '\n'.join(missingDependencies))
+            sys.exit()
+            
+    def logDepends(self):
+        if self.depends == None:
+            return
+        
+        print("[Install] Logging dependencies")
+        for i in self.depends:
+            dependLog = { "dependency": i, "parentPkg": self.name }
+            with open("/usr/share/gpkg/dependencies.p", "ab") as f:
+                pickle.dump(dependLog, f)
 
 
     def runShAsPkgUser(self, file):
@@ -107,13 +124,4 @@ class Package:
 
     def runPostSh(self):
         self.runShAsRoot(self.postShLocation)
-
-class Dependency(Package):
-    def __init__(self, parentPkg, dir):
-        super.__init__(dir)
-        self.parentPkgName = parentPkg
-        self.logAsDependency()
-
-    def logAsDependency(self):
-        pass
 

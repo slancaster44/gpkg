@@ -35,7 +35,7 @@ class PackageBuilder:
         elif 'pkginfo.json' not in filesOfDir:
             sys.exit("Package must contain 'pkginfo.json' before building")
         elif 'tarball.tar.xz' not in filesOfDir and 'tarball.tar.gz' not in filesOfDir:
-            sys.exit("Package must contain 'taball.tar.*' before building")
+            sys.exit("Package must contain 'tarball.tar.*' before building")
 
         self.checkJson()
         os.chdir("..")
