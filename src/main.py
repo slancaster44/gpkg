@@ -3,13 +3,8 @@ import argparse
 import sys
 import os
 
-import UserMgmt
-import Installation
-import PkgCreation
-import Listing
-import Removal
-import Init
-
+import Build
+import Install
 
 parser = argparse.ArgumentParser(description='gpkg Package Manager')
 parser.add_argument("-I", "--install",
@@ -33,38 +28,42 @@ parser.add_argument('-B', "--build",
                    dest="bPkg")
 
 def install(pkg):
-    Installation.install(os.path.abspath(pkg))
+    if os.getuid() != 0:
+        sys.exit("Can only install package as root")
+
+    Install.install(pkg)
 
 def remove(pkg):
-    Removal.remove(pkg)
-
-def listPkg(pkg):
-    pkgInfo = Listing.getInfoFor(pkg)
-    print(pkgInfo)
+    if os.getuid() != 0:
+        sys.exit("Can only remove package as root")
 
 def init():
-    Init.initGpkg()
+    pass
+
+def listPkg(pkg):
+    pass
 
 def build(pkg):
-    name = os.path.basename(pkg)
-    PkgCreation.mkPkgFrom(name, os.path.abspath(pkg))
+    Build.build(pkg)
 
 if __name__ == '__main__':
     args = parser.parse_args()
 
-    if os.getuid() != 0:
+    vals = vars(args).values()
+    selectedArgVals = [x for x in vals if x != False and x != None]
+    if selectedArgVals == []:
         parser.print_help()
-        sys.exit("Must run gpkg as root")
+        sys.exit()
 
     if args.inPkg != None:
         install(args.inPkg)
-    elif args.rmPkg != None:
+    if args.rmPkg != None:
         remove(args.rmPkg)
-    elif args.lPkg != None:
+    if args.lPkg != None:
         listPkg(args.lPkg)
-    elif args.bPkg != None:
+    if args.bPkg != None:
         build(args.bPkg)
-    elif args.init:
+    if args.init:
         init()
-    else:
-       sys.exit("No valid arguments")
+
+
