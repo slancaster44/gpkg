@@ -5,6 +5,8 @@ import os
 
 import Build
 import Install
+import List 
+import Remove
 
 parser = argparse.ArgumentParser(description='gpkg Package Manager')
 parser.add_argument("-I", "--install",
@@ -37,11 +39,13 @@ def remove(pkg):
     if os.getuid() != 0:
         sys.exit("Can only remove package as root")
 
+    Remove.remove(pkg)
+
 def init():
     pass
 
 def listPkg(pkg):
-    pass
+    List.listPkg(pkg)
 
 def build(pkg):
     Build.build(pkg)

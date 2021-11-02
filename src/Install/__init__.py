@@ -6,6 +6,7 @@ import subprocess
 from Install import package
 from Install import fakerootMapper
 import PkgMetadata
+import List
 '''
 A unique temporary folder must be 
 created for pre-installation procedures
@@ -14,32 +15,40 @@ to take place in
 tmpDir = "/tmp/gpkg" + str(os.getpid())
 
 def install(pkgLocation):
+    print("[Install] Installing '" + pkgLocation + "'...")
     pkgLocation = os.path.abspath(pkgLocation)
 
+    print("[Install] Creating temporary build environment")
     os.mkdir(tmpDir)
+
+    print("[Install] Opening '.gpkg' file")
     unTarPkg(pkgLocation)
 
     pkgObj = package.package(getPkgDirLocation())
 
+    print("[Install] Opening source code tarball")
     pkgObj.openTarball()
     pkgObj.runCompileSh()
 
+    print("[Install] Installing to fakeroot")
     fakeRootLoc = mkFakeroot(pkgObj)
     pkgObj.installToFakeRoot(fakeRootLoc)
 
+    print("[Install] Mapping fakeroot")
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
+    
+    print("[Install] Installing to trueroot")
     installPkgFromFkRoot(fkrtMap, fakeRootLoc)
 
     pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
-    PkgMetadata.save(pkgData)
+    List.saveListingOn(pkgData)
 
+    print("[Install] Removing temporary build environment")
     shutil.rmtree(tmpDir)
 
 def unTarPkg(pkgLocation):
     pkgFileName = tmpDir + "/" + os.path.basename(pkgLocation)
-    shutil.copy(pkgLocation, tmpDir)
-
-    with tarfile.open(pkgFileName, 'r') as f:
+    shutil.copy(pPkgMetadata.saveopen(pkgFileName, 'r') as f:
         f.extractall(path=tmpDir)
 
 def getPkgDirLocation():

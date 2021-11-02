@@ -13,7 +13,7 @@ class pkgMetadata:
     def __str__(self):
         rtrnStr = self.basicInfoAsStr()
 
-        rtrnStr += "-- Associated Files & Directories --\n"
+        rtrnStr += "\n-- Associated Files & Directories --\n"
         for i in self.fakeRootMap.files:
             rtrnStr += "[file] " + i + "\n"
         for i in self.fakeRootMap.dirs:
@@ -25,14 +25,8 @@ class pkgMetadata:
         rtrnStr = "[Package Info]\n"
         rtrnStr += "Name: " + self.name + "\n"
         rtrnStr += "Version: " + self.version + "\n"
-        rtrnStr += "Dependencies: " + self.dependencies + "\n\n"
+        rtrnStr += "Dependencies: " + self.dependencies + "\n"
 
-        rtrnStr += "Description: " + self.description + "\n\n"
+        rtrnStr += "Description: " + self.description 
         return rtrnStr
 
-def save(pkgdata):
-    if not os.path.exists('/var/lib/gpkg'):
-        os.mkdir('/var/lib/gpkg')
-
-    with open('/var/lib/gpkg/pkgdata.p', 'ab') as f:
-        pickle.dump(pkgdata, f)
