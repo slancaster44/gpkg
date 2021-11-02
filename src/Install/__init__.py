@@ -48,7 +48,9 @@ def install(pkgLocation):
 
 def unTarPkg(pkgLocation):
     pkgFileName = tmpDir + "/" + os.path.basename(pkgLocation)
-    shutil.copy(pPkgMetadata.saveopen(pkgFileName, 'r') as f:
+    shutil.copy(pkgLocation, tmpDir)
+        
+    with tarfile.open(pkgFileName, 'r') as f:
         f.extractall(path=tmpDir)
 
 def getPkgDirLocation():
