@@ -28,6 +28,7 @@ def install(pkgLocation):
     pkgObj.installToFakeRoot(fakeRootLoc)
 
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
+    installPkgFromFkRoot(fkrtMap, fakeRootLoc)
 
     pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
     PkgMetadata.save(pkgData)
@@ -51,7 +52,18 @@ def mkFakeroot(pkgObj):
     os.mkdir(fakeRootLoc)
     return fakeRootLoc
 
-def installPkgFromFkRoot(fkrootLocation):
-    os.chdir(fkrootLocation)
-    os.system("tar cf - . | (cd / ; tar xf - )")
+def installPkgFromFkRoot(fkrtMap, fkrtLocation):
+    #This sorts the directories into the order they need to be created, by 
+    #sorting them by depth in the root ('/') heirarchy. We figure out the depth
+    #by counting the number of '/' in the name of the directory
+    dirsSortedByHeirachy = sorted(fkrtMap.dirs, key=lambda dir: dir.count('/'))
+
+    #Create the necessary directories:
+    for i in dirsSortedByHeirachy:
+       os.mkdir(i)
+
+    #Move the files to the directories:
+    for i in fkrtMap.files:
+        locationInFkrt = fkrtLocation + i
+        shutil.copyfile(locationInFkrt, i)
     
