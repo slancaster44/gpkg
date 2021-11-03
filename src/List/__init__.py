@@ -67,6 +67,20 @@ def removeListingOn(pkgName):
         for i in pkgsNotIncludingToBeRemoved:
             pickle.dump(i, f)
 
+def rmAssocItemFromPkg(itemLocation, pkgName):
+    absItemLoc = os.path.abspath(itemLocation)
+
+    pkgData = findPkg(pkgName)
+    if pkgData == None:
+        sys.exit("[List] Cannot remove association from a package that is not installed: " + pkgName)
+
+    if absItemLoc in pkgData.fakeRootMap.dirs:
+        pkgData.fakeRootMap.dirs.remove(absItemLoc)
+    elif absItemLoc in pkgData.fakeRootMap.files:
+        pkgData.fakeRootMap.files.remove(absItemLoc)
+
+    updateListing(pkgData)
+
 def associateNewItemWithPkg(itemLocation, pkgName):
     absItemLoc = os.path.abspath(itemLocation)
 

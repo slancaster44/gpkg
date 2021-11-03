@@ -30,6 +30,11 @@ parser.add_argument("-Am", "--make_association",
                     help="Associate given file or dir with given package",
                     nargs=2,
                     dest="amArgs")
+parser.add_argument("-Ar", "--remove_association",
+                    metavar="<file_or_dir_name> <pkg_name>",
+                    help="Remove association of file or dir with given package",
+                    nargs=2,
+                    dest="arArgs")
 parser.add_argument("-i", "--init",
                     help="Initialize gpkg system",
                     action="store_true")
@@ -64,6 +69,11 @@ def makeAssociation(item, pkg):
         sys.exit("Can only create item association as root")
     List.associateNewItemWithPkg(item, pkg)
 
+def removeAssociation(item, pkg):
+    if os.getuid() != 0:
+        sys.exit("Can only remove item association as root")
+    List.rmAssocItemFromPkg(item, pkg)
+
 def build(pkg):
     Build.build(pkg)
 
@@ -88,6 +98,8 @@ if __name__ == '__main__':
         listAssociated(args.laPkg)
     if args.amArgs != None:
         makeAssociation(args.amArgs[0], args.amArgs[1])
+    if args.arArgs != None:
+        removeAssociation(args.arArgs[0], args.arArgs[1])
     if args.init:
         init()
 
