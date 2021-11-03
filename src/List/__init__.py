@@ -48,7 +48,7 @@ def saveListingOn(pkgdata):
     with open('/var/lib/gpkg/pkgdata.p', 'ab') as f:
         pickle.dump(pkgdata, f)
 
-def removeListingOn(pkg):
+def removeListingOn(pkgName):
     allPkgs = loadAllPkgs()
     pkgsNotIncludingToBeRemoved = [x for x in allPkgs if x.name != pkgName]
 

@@ -23,3 +23,5 @@
 	-- postinstall.sh
 
 
+TODO:
+	Can't install file does not exist err handle
