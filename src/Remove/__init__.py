@@ -13,6 +13,7 @@ def remove(pkgName):
 
 
     for i in filesToBeRemoved:
+        print(i)
         try:
             print("[Remove] Removing file: " + i)
             os.remove(i)
@@ -20,6 +21,7 @@ def remove(pkgName):
             handleFailedRemoval(i)
         
     for i in dirsToBeRemoved:
+        print(i)
         try:
             print("[Remove] Removing directory: " + i)
             os.rmdir(i)

@@ -41,7 +41,7 @@ def handleExistingItem(item):
     if os.path.isfile(item):
         print("[Fakeroot Mapper] '" + item + "' already exists")
         shouldOverwrite = input("\tShould this item be overwritten during install [y/N] ")
-        if shouldOverwrite != "Y" or shouldOverwrite != 'y':
+        if shouldOverwrite != "Y" and shouldOverwrite != 'y':
             sys.exit(1)
         return True
     else:
