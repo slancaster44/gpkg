@@ -21,6 +21,10 @@ parser.add_argument("-L", "--list",
                     metavar="<pkg_name>",
                     help="List given packages, or list all packages",
                     dest="lPkg")
+parser.add_argument("-La", "--list_associated",
+                    metavar="<pkg_name>",
+                    help="List files and directories associated with a given package",
+                    dest="laPkg")
 parser.add_argument("-i", "--init",
                     help="Initialize gpkg system",
                     action="store_true")
@@ -47,6 +51,9 @@ def init():
 def listPkg(pkg):
     List.listPkg(pkg)
 
+def listAssociated(pkg):
+    List.listAssociated(pkg)
+
 def build(pkg):
     Build.build(pkg)
 
@@ -67,6 +74,8 @@ if __name__ == '__main__':
         listPkg(args.lPkg)
     if args.bPkg != None:
         build(args.bPkg)
+    if args.laPkg != None:
+        listAssociated(args.laPkg)
     if args.init:
         init()
 

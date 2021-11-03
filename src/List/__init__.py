@@ -11,6 +11,13 @@ def listPkg(pkgName):
     else:
         print(pkg.basicInfoAsStr())
 
+def listAssociated(pkgName):
+    pkg = findPkg(pkgName)
+    if pkg == None:
+        print("[List] Package does not exist: '" + pkgName + "'") 
+    else:
+        print(pkg)
+
 #Returns None if package does not exist
 #returns pkg metadata if it does
 def findPkg(pkgName):

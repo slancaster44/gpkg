@@ -8,12 +8,12 @@ def remove(pkgName):
     if pkgListing == None:
         sys.exit("[Remove] Cannot remove package that is not installed: '" + pkgName + "'")
     
-    filesToBeRemoved = pkgListing.fakeRootMap.files
-    dirsToBeRemoved = pkgListing.fakeRootMap.dirs
+    #Files and dirs sorted by depth
+    filesToBeRemoved = sorted(pkgListing.fakeRootMap.files, key=lambda dir: dir.count('/'))
+    dirsToBeRemoved = sorted(pkgListing.fakeRootMap.dirs, key=lambda dir: dir.count('/'))
 
 
     for i in filesToBeRemoved:
-        print(i)
         try:
             print("[Remove] Removing file: " + i)
             os.remove(i)
@@ -21,7 +21,6 @@ def remove(pkgName):
             handleFailedRemoval(i)
         
     for i in dirsToBeRemoved:
-        print(i)
         try:
             print("[Remove] Removing directory: " + i)
             os.rmdir(i)
