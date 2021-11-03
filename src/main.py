@@ -25,6 +25,11 @@ parser.add_argument("-La", "--list_associated",
                     metavar="<pkg_name>",
                     help="List files and directories associated with a given package",
                     dest="laPkg")
+parser.add_argument("-Am", "--make_association",
+                    metavar="<file_or_dir_name> <pkg_name>",
+                    help="Associate given file or dir with given package",
+                    nargs=2,
+                    dest="amArgs")
 parser.add_argument("-i", "--init",
                     help="Initialize gpkg system",
                     action="store_true")
@@ -46,13 +51,18 @@ def remove(pkg):
     Remove.remove(pkg)
 
 def init():
-    pass
+    pass #TODO: Remove
 
 def listPkg(pkg):
     List.listPkg(pkg)
 
 def listAssociated(pkg):
     List.listAssociated(pkg)
+
+def makeAssociation(item, pkg):
+    if os.getuid() != 0:
+        sys.exit("Can only create item association as root")
+    List.associateNewItemWithPkg(item, pkg)
 
 def build(pkg):
     Build.build(pkg)
@@ -76,6 +86,8 @@ if __name__ == '__main__':
         build(args.bPkg)
     if args.laPkg != None:
         listAssociated(args.laPkg)
+    if args.amArgs != None:
+        makeAssociation(args.amArgs[0], args.amArgs[1])
     if args.init:
         init()
 

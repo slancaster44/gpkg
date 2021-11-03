@@ -24,8 +24,6 @@
 
 
 TODO:
-	Can't install file does not exist err handle
-	Build json value checking
 	Add -Am makes association with file and program
 	Add -Ar removes association with file and program
 

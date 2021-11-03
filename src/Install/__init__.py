@@ -7,7 +7,7 @@ import sys
 
 from Install import package
 from Install import fakerootMapper
-import PkgMetadata
+import List.packageMetadata as PkgMetadata
 import List
 '''
 A unique temporary folder must be 

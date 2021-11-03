@@ -1,5 +1,6 @@
 import os 
 import pickle 
+import sys
 
 class pkgMetadata:
     def __init__(self, pkgInfoJson, fkRootMap):

@@ -2,6 +2,8 @@ import os
 import sys
 import pickle
 
+import Utils
+
 #finds package using findPkg()
 #and prints info about it
 def listPkg(pkgName):
@@ -64,3 +66,37 @@ def removeListingOn(pkgName):
     with open("/var/lib/gpkg/pkgdata.p", "wb") as f:
         for i in pkgsNotIncludingToBeRemoved:
             pickle.dump(i, f)
+
+def associateNewItemWithPkg(itemLocation, pkgName):
+    absItemLoc = os.path.abspath(itemLocation)
+
+    if not os.path.exists(itemLocation):
+        sys.exit("[List] Cannot associate non-expkgData.nameistant file: " + absItemLoc)
+
+    pkgData = findPkg(pkgName)
+    if pkgData == None:
+        sys.exit("[List] Cannot associate with a package that is not installed: " + pkgName)    
+
+    itemType = Utils.pathType(absItemLoc)
+    if itemType == "file":
+        associateFileWith(absItemLoc, pkgData)
+    else:
+        associateDirWith(absItemLoc, pkgData)
+
+def associateFileWith(fileLoc, pkgData):
+    if fileLoc in pkgData.fakeRootMap.files:
+        sys.exit("[List] "+ fileLoc +" is already associated with "+pkgData.name)
+
+    pkgData.fakeRootMap.files.append(fileLoc)
+    updateListing(pkgData)
+
+def associateDirWith(fileLoc, pkgData):
+    if fileLoc in pkgData.fakeRootMap.dirs:
+        sys.exit("[List] "+ fileLoc +" is already associated with "+pkgData.name)
+
+    pkgData.fakeRootMap.dirs.append(fileLoc)
+    updateListing(pkgData)
+
+def updateListing(pkgData):
+    removeListingOn(pkgData.name)
+    saveListingOn(pkgData)

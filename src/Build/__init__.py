@@ -31,6 +31,7 @@ def checkContents(dir):
     listOfTarballs = Utils.findTarballsIn(dir)
     if len(listOfTarballs) != 1:
         sys.exit("[Build] Can only build package that contains one tarball")
+    checkTarball(dir + "/" + listOfTarballs[0])
 
     listOfCompileScripts = Utils.findCompileScriptsIn(dir)
     if len(listOfCompileScripts) != 1:
@@ -50,6 +51,7 @@ def checkJson(jsonFileLocation):
         sys.exit("[Build] Could not read '" + jsonFileLocation + "'")
     jsonFile.close()
 
+    ##Make sure the items required in pkginfo.json are there
     requiredItems = ['name', 'version', 
     'description', 'dependencies', 
     'install_options', 'envar']
@@ -58,11 +60,31 @@ def checkJson(jsonFileLocation):
         if not i in jsonContents.keys():
             sys.exit("[Build] 'pkginfo.json' must contain key '" + i + "'")
 
-    ##TODO: Test types of install options
-    ##Make sure the tarball contains 1 folder
+    itemsThatShouldBeStrings = ['name', 'version', 'description', 'envar']
+    itemsThatShouldBeLists = ['install_options', 'dependencies']
+
+    ## Type check items in 'pkginf.json'
+    for i in itemsThatShouldBeStrings:
+        item = jsonContents[i]
+        if not isinstance(item, str):
+            sys.exit("[Build] Variable in 'pkginfo.json' must be stored as string: " + i)
+
+    for i in itemsThatShouldBeLists:
+        item = jsonContents[i]
+        if not isinstance(item, list) and item != None:
+            sys.exit("[Build] Variable in 'pkginfo.json' must be stored as list: " + i)
+
+def checkTarball(tarball):
+    ##Ensure that tarball contains 1 upper level directory
+    with tarfile.open(tarball, "r") as f:
+        upperLevelMembers = [x for x in f.getmembers() if not "/" in x.name]
+            
+        if len(upperLevelMembers) != 1:
+            sys.exit("[Build] You must have one upper level directory in tarball: " + tarball)
 
 def tarContents(dir):
     nameOfGpkgFile = os.path.basename(dir) + ".gpkg"
 
     with tarfile.open(nameOfGpkgFile, "w:xz") as tar:
         tar.add(dir, arcname=os.path.basename(dir))
+
