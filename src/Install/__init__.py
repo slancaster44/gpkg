@@ -2,6 +2,8 @@ import os
 import shutil
 import tarfile
 import subprocess
+import stat
+import sys
 
 from Install import package
 from Install import fakerootMapper
@@ -18,6 +20,9 @@ def install(pkgLocation):
     print("[Install] Installing '" + pkgLocation + "'...")
     pkgLocation = os.path.abspath(pkgLocation)
 
+    if not os.path.exists(pkgLocation):
+        sys.exit("[Install] Cannot install package, file does not exist: " + pkgLocation)
+
     print("[Install] Creating temporary build environment")
     os.mkdir(tmpDir)
 
@@ -25,23 +30,33 @@ def install(pkgLocation):
     unTarPkg(pkgLocation)
 
     pkgObj = package.package(getPkgDirLocation())
+    if List.findPkg(pkgObj.name) != None:
+        sys.exit("[Install] Package is already installed: " + pkgObj.name)
 
     print("[Install] Opening source code tarball")
-    pkgObj.openTarball()
-    pkgObj.runCompileSh()
+    openPkgTarball(pkgObj)
+
+    print("[Install] Running 'compile.sh'")
+    runPkgCompileSh(pkgObj)
 
     print("[Install] Installing to fakeroot")
     fakeRootLoc = mkFakeroot(pkgObj)
-    pkgObj.installToFakeRoot(fakeRootLoc)
+    installPkgToFakeRoot(pkgObj, fakeRootLoc)
 
     print("[Install] Mapping fakeroot")
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
+
+    print("[Install] Running postfake.sh")
+    runPkgPostFakeSh(pkgObj)
     
     print("[Install] Installing to trueroot")
     installPkgFromFkRoot(fkrtMap, fakeRootLoc)
 
     pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
     List.saveListingOn(pkgData)
+
+    print("[Install] Running 'postinstall.sh'")
+    runPkgPostInstallSh(pkgObj)
 
     print("[Install] Removing temporary build environment")
     shutil.rmtree(tmpDir)
@@ -79,4 +94,54 @@ def installPkgFromFkRoot(fkrtMap, fkrtLocation):
         print("[Install] Installing file: " + i)
         locationInFkrt = fkrtLocation + i
         shutil.copyfile(locationInFkrt, i)
-    
+
+#TODO: Does build accept the envar as install opt? It shouldn't
+def installPkgToFakeRoot(pkg, location):
+        cmd = ["make"]
+        
+        if pkg.installOpts != None:
+            cmd += pkg.installOpts
+        
+        cmd += [pkg.envar+"="+location, "install"]
+        subprocess.run(cmd)
+
+def openPkgTarball(pkg):
+    oldContents = pkg.dirContents
+
+    with tarfile.open(pkg.tarballLocation, 'r') as f:
+        f.extractall(path=pkg.directory)
+
+    ## Determine what was just extracted
+    pkg.dirContents = os.listdir(pkg.directory)
+    pkg.extractedContents = os.listdir(pkg.directory) #Put everything in extracted
+    for i in oldContents:
+        pkg.extractedContents.remove(i) #Remove old stuff from extracted
+                                            #This ensures that if a new file
+                                            #have the same name as an old one,
+                                            #it gets counted as an extracted item
+
+def runSh(pkg, scriptName):
+    firstExtractedItem = pkg.directory + "/" + pkg.extractedContents[0]
+
+    os.chdir(firstExtractedItem)
+    scriptLocation = firstExtractedItem + "/" + os.path.basename(scriptName)
+    shutil.copyfile(scriptName, scriptLocation)
+
+    os.chmod(scriptLocation, stat.S_IEXEC) #marks compilation script as executable
+    os.system(scriptLocation)
+
+
+def runPkgCompileSh(pkg):
+    runSh(pkg, pkg.compileShLoc)
+
+def runPkgPostInstallSh(pkg):
+    if pkg.postInstallShLoc == None:
+        print("\tNo 'postinstall.sh' to run")
+    else:
+        runSh(pkg, pkg.postInstallShLoc)
+
+def runPkgPostFakeSh(pkg):
+    if pkg.postFakeShLoc == None:
+        print("\tNo 'postfake.sh' to run")
+    else:
+        runSh(pkg, pkg.postFakeShLoc)

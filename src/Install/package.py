@@ -1,9 +1,6 @@
 import os
 import json
-import tarfile
-import shutil
-import stat
-import subprocess
+
 
 import Utils
 
@@ -73,38 +70,3 @@ class package:
 
     def getEnvar(self):
         return self.pkgInfoContents["envar"]
-
-    def openTarball(self):
-        oldContents = self.dirContents
-
-        with tarfile.open(self.tarballLocation, 'r') as f:
-            f.extractall(path=self.directory)
-
-        ## Determine what was just extracted
-        self.dirContents = os.listdir(self.directory)
-        self.extractedContents = os.listdir(self.directory) #Put everything in extracted
-        for i in oldContents:
-            self.extractedContents.remove(i) #Remove old stuff from extracted
-                                             #This ensures that if a new file
-                                             #have the same name as an old one,
-                                             #it gets counted as an extracted item
-        
-    def runCompileSh(self):
-        
-        firstExtractedItem = self.directory + "/" + self.extractedContents[0]
-        
-        os.chdir(firstExtractedItem)
-        shutil.copyfile(self.compileShLoc, firstExtractedItem + "/compile.gpkg.sh")
-        self.compileShLoc = firstExtractedItem + "/compile.gpkg.sh"
-        
-        os.chmod(self.compileShLoc, stat.S_IEXEC)
-        os.system(self.compileShLoc)
-
-    def installToFakeRoot(self, location):
-        cmd = ["make"]
-        
-        if self.installOpts != None:
-            cmd += self.installOpts
-        
-        cmd += [self.envar+"="+location, "install"]
-        subprocess.run(cmd)
