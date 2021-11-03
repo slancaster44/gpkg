@@ -49,6 +49,7 @@ def loadAllPkgs():
     return setOfAllPkgs
 
 def saveListingOn(pkgdata):
+    print("[List] Creating listing for: " + pkgdata.name)
     if not os.path.exists('/var/lib/gpkg'):
         os.mkdir('/var/lib/gpkg')
 
@@ -56,6 +57,7 @@ def saveListingOn(pkgdata):
         pickle.dump(pkgdata, f)
 
 def removeListingOn(pkgName):
+    print("[List] Removing listing for: " + pkgName)
     allPkgs = loadAllPkgs()
     pkgsNotIncludingToBeRemoved = [x for x in allPkgs if x.name != pkgName]
 

@@ -25,3 +25,4 @@
 
 TODO:
 	Can't install file does not exist err handle
+	do postfake.sh and postinstall.sh running

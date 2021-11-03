@@ -71,10 +71,12 @@ def installPkgFromFkRoot(fkrtMap, fkrtLocation):
 
     #Create the necessary directories:
     for i in dirsSortedByHeirachy:
-       os.mkdir(i)
+        print("[Install] Making directory: " + i)
+        os.mkdir(i)
 
     #Move the files to the directories:
     for i in fkrtMap.files:
+        print("[Install] Installing file: " + i)
         locationInFkrt = fkrtLocation + i
         shutil.copyfile(locationInFkrt, i)
     
