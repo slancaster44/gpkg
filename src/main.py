@@ -4,6 +4,7 @@ import sys
 import os
 
 import Build
+import Build.dmip as dmip
 import Install
 import List 
 import Remove
@@ -42,6 +43,10 @@ parser.add_argument('-B', "--build",
                    metavar="<dir>",
                    help="Build package from given directory",
                    dest="bPkg")
+parser.add_argument('-Bd', "--make_build_dir",
+                    metavar="<tarball>",
+                    help="Create a directory with a given tarball that can be used to create a '.gpkg' file",
+                    dest="bdPkg")
 
 def install(pkg):
     if os.getuid() != 0:
@@ -77,6 +82,9 @@ def removeAssociation(item, pkg):
 def build(pkg):
     Build.build(pkg)
 
+def mkDmipDir(pkg):
+    dmip.mkDmipDir(pkg)
+
 if __name__ == '__main__':
     args = parser.parse_args()
 
@@ -94,6 +102,8 @@ if __name__ == '__main__':
         listPkg(args.lPkg)
     if args.bPkg != None:
         build(args.bPkg)
+    if args.bdPkg != None:
+        mkDmipDir(args.bdPkg)
     if args.laPkg != None:
         listAssociated(args.laPkg)
     if args.amArgs != None:

@@ -23,9 +23,17 @@
 	-- postinstall.sh
 
 
+Build Tool Commands:
+	-- "-Bd" -- Creates directory with tar file and 
+	default 'pkginfo.json' and 'compile.sh'
+		-- Dialog for pkginfo.json information
+		collection
+		-- Default 'compile.sh'
+			#!/bin/bash
+			./configure
+			make
+
 TODO:
-	Add -Am makes association with file and program
-	Add -Ar removes association with file and program
 
 	Create Build tool for building .gpkg files from .tar.xz files
 
