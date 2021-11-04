@@ -103,7 +103,15 @@ def installPkgToFakeRoot(pkg, location):
             cmd += pkg.installOpts
         
         cmd += [pkg.envar+"="+location, "install"]
-        subprocess.run(cmd)
+        returnCode = subprocess.run(cmd).returncode
+        if returnCode != 0:
+            handleFailedScript("make install")
+
+def handleFailedScript(scriptName):
+    print("[Build] Script returned non-zero value: " + scriptName)
+    shouldContinue = input("\tShould we continue with the installation process? [y/N] ")
+    if shouldContinue != 'Y' and shouldContinue != 'y':
+        sys.exit(1)
 
 def openPkgTarball(pkg):
     oldContents = pkg.dirContents
@@ -128,7 +136,9 @@ def runSh(pkg, scriptName):
     shutil.copyfile(scriptName, scriptLocation)
 
     os.chmod(scriptLocation, stat.S_IEXEC) #marks compilation script as executable
-    os.system(scriptLocation)
+    returnCode = subprocess.run([scriptLocation]).returncode
+    if returnCode != 0:
+        handleFailedScript(scriptName)
 
 
 def runPkgCompileSh(pkg):

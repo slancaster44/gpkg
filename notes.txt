@@ -34,8 +34,7 @@ Build Tool Commands:
 			make
 
 TODO:
-
-	Create Build tool for building .gpkg files from .tar.xz files
+	Pull out of install process upon failed scripts
 
 	Add Repository support
 		1) Find programs in repository
