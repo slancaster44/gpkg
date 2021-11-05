@@ -36,9 +36,6 @@ parser.add_argument("-Ar", "--remove_association",
                     help="Remove association of file or dir with given package",
                     nargs=2,
                     dest="arArgs")
-parser.add_argument("-i", "--init",
-                    help="Initialize gpkg system",
-                    action="store_true")
 parser.add_argument('-B', "--build",
                    metavar="<dir>",
                    help="Build package from given directory",
@@ -60,8 +57,6 @@ def remove(pkg):
 
     Remove.remove(pkg)
 
-def init():
-    pass #TODO: Remove
 
 def listPkg(pkg):
     List.listPkg(pkg)
@@ -110,7 +105,5 @@ if __name__ == '__main__':
         makeAssociation(args.amArgs[0], args.amArgs[1])
     if args.arArgs != None:
         removeAssociation(args.arArgs[0], args.arArgs[1])
-    if args.init:
-        init()
 
 

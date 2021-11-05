@@ -22,6 +22,22 @@
 	-- relocate package OR create symlinks to all?
 	-- postinstall.sh
 
+-- Repository Specification:
+	-- dmir tool Specification
+		Commands:
+			-M :: Makes an empty directory with default 'repospecs.p'
+			-A :: Adds a given package to a given repository
+			-R :: Removes a given package from a given repository
+	-- Added dmi/gpkg commands:
+		- Da :: Adds a given repository at a given location
+		- Dr :: Removes repository at a given location
+		-- Repository information will be stored in
+		/var/lib/gpkg/reposinfo.p
+	-- repospecs.p :: Exists in every repository
+		-- Contains an instance of a 'repospecs' class
+		that contains information on the repository
+			-- Package list
+			-- Modification record
 
 Build Tool Commands:
 	-- "-Bd" -- Creates directory with tar file and 
@@ -34,8 +50,6 @@ Build Tool Commands:
 			make
 
 TODO:
-	Pull out of install process upon failed scripts
-
 	Add Repository support
 		1) Find programs in repository
 			A) Add/rm repo
