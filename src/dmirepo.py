@@ -3,7 +3,7 @@
 import argparse
 
 import Repo
-import Search
+import Repo.Search as Search
 
 parser = argparse.ArgumentParser(description="dmir - DMI Repository management tool")
 parser.add_argument("-M", "--mkrepo",

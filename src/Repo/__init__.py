@@ -2,9 +2,9 @@ import os
 import pickle
 import shutil
 
-import RepoSpecs
-from RepoSpecs import pkg
-from RepoSpecs import modlog
+import Repo.RepoSpecs as RepoSpecs
+from Repo.RepoSpecs import pkg
+from Repo.RepoSpecs import modlog
 
 def mkRepo(repoLocation):
     repoLocation = os.path.abspath(repoLocation)
