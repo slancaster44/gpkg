@@ -2,7 +2,7 @@
 
 import argparse
 
-import Repo
+import Repo.Dmirepo as Repo
 import Repo.Search as Search
 
 parser = argparse.ArgumentParser(description="dmir - DMI Repository management tool")

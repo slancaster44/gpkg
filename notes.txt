@@ -50,6 +50,8 @@ Build Tool Commands:
 			make
 
 TODO:
+	dmir error catching support 
+
 	Add Repository support
 		1) Find programs in repository
 			A) Add/rm repo

@@ -20,7 +20,7 @@ parser.add_argument("-R", "--remove",
                     dest="rmPkg")
 parser.add_argument("-L", "--list",
                     metavar="<pkg_name>",
-                    help="List given packages, or list all packages",
+                    help="List information on an installed package",
                     dest="lPkg")
 parser.add_argument("-La", "--list_associated",
                     metavar="<pkg_name>",
@@ -46,15 +46,12 @@ parser.add_argument('-Bd', "--make_build_dir",
                     dest="bdPkg")
 
 def install(pkg):
-    if os.getuid() != 0:
-        sys.exit("Can only install package as root")
+    ensureRootPrivilege()
 
     Install.install(pkg)
 
 def remove(pkg):
-    if os.getuid() != 0:
-        sys.exit("Can only remove package as root")
-
+    ensureRootPrivilege()
     Remove.remove(pkg)
 
 
@@ -65,13 +62,11 @@ def listAssociated(pkg):
     List.listAssociated(pkg)
 
 def makeAssociation(item, pkg):
-    if os.getuid() != 0:
-        sys.exit("Can only create item association as root")
+    ensureRootPrivilege()
     List.associateNewItemWithPkg(item, pkg)
 
 def removeAssociation(item, pkg):
-    if os.getuid() != 0:
-        sys.exit("Can only remove item association as root")
+    ensureRootPrivilege()
     List.rmAssocItemFromPkg(item, pkg)
 
 def build(pkg):
@@ -80,30 +75,29 @@ def build(pkg):
 def mkDmipDir(pkg):
     dmip.mkDmipDir(pkg)
 
+def ensureRootPrivilege():
+    if os.getuid() != 0:
+        sys.exit("Can only run this operation as root")
+
 if __name__ == '__main__':
     args = parser.parse_args()
 
-    vals = vars(args).values()
-    selectedArgVals = [x for x in vals if x != False and x != None]
-    if selectedArgVals == []:
-        parser.print_help()
-        sys.exit()
-
     if args.inPkg != None:
         install(args.inPkg)
-    if args.rmPkg != None:
+    elif args.rmPkg != None:
         remove(args.rmPkg)
-    if args.lPkg != None:
+    elif args.lPkg != None:
         listPkg(args.lPkg)
-    if args.bPkg != None:
+    elif args.bPkg != None:
         build(args.bPkg)
-    if args.bdPkg != None:
+    elif args.bdPkg != None:
         mkDmipDir(args.bdPkg)
-    if args.laPkg != None:
+    elif args.laPkg != None:
         listAssociated(args.laPkg)
-    if args.amArgs != None:
+    elif args.amArgs != None:
         makeAssociation(args.amArgs[0], args.amArgs[1])
-    if args.arArgs != None:
+    elif args.arArgs != None:
         removeAssociation(args.arArgs[0], args.arArgs[1])
-
+    else:
+        parser.print_help()
 

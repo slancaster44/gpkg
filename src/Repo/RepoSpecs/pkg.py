@@ -1,12 +1,16 @@
 import json
 import tarfile
 import os
+import sys
 
 import List
 
 class Pkg:
     def __init__(self, location):
-        self.pkgLocation = os.path.abspath(location) 
+        self.pkgLocation = os.path.abspath(location)
+        if not os.path.exists(self.pkgLocation):
+            sys.exit("[repospecs] No such package: " + self.pkgLocation)
+
         self.basename = os.path.basename(location)
 
         self.pkgInfoJson = self.getPkgInfoJson()
