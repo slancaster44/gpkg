@@ -19,7 +19,7 @@ def addPkg(pkgLocation, repoLocation):
     pkgObj = pkg.Pkg(pkgLocation)
     shutil.copy(pkgLocation, repoLocation)
 
-    pkgObj.pkgLocation = repoLocation + "/" + pkgObj.basename
+    pkgObj.pkgLocation = repoLocation + pkgObj.basename
 
     repospecs = None
     with open(repoLocation + "/repospecs.p", "rb") as f:
