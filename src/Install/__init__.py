@@ -16,7 +16,10 @@ to take place in
 '''
 tmpDir = "/tmp/gpkg" + str(os.getpid())
 
-def install(pkgLocation):
+def install(pkgIdentifier):
+    installFromFile(pkgIdentifier)
+
+def installFromFile(pkgLocation):
     print("[Install] Installing '" + pkgLocation + "'...")
     pkgLocation = os.path.abspath(pkgLocation)
 
