@@ -9,6 +9,8 @@ from Install import package
 from Install import fakerootMapper
 import List.packageMetadata as PkgMetadata
 import List
+import Repo
+
 '''
 A unique temporary folder must be 
 created for pre-installation procedures
@@ -17,7 +19,13 @@ to take place in
 tmpDir = "/tmp/dmi" + str(os.getpid())
 
 def install(pkgIdentifier):
-    installFromFile(pkgIdentifier)
+    pkg = Repo.searchAll(pkgIdentifier)
+    if pkg != None:
+        installFromFile(pkg.pkgLocation)
+    elif os.path.exists(pkgIdentifier):
+       installFromFile(pkgIdentifier)
+    else:
+        sys.exit("[Install] No such package " + pkgIdentifier)
 
 def installFromFile(pkgLocation):
     print("[Install] Installing '" + pkgLocation + "'...")

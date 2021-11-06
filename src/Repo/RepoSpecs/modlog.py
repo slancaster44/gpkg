@@ -6,4 +6,4 @@ class modifcationLogEntry:
         self.message = message
 
     def __str__(self):
-        return "[" + str(self.timestamp) + "] " + self.message
+        return "[" + str(self.timestamp) + "] " + self.message + "\n"

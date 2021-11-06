@@ -15,7 +15,7 @@ def mkRepo(repoLocation):
     repoLocation = os.path.abspath(repoLocation)
     os.mkdir(repoLocation)
 
-    repospecs = RepoSpecs.repoSpecs()
+    repospecs = RepoSpecs.repoSpecs(repoLocation)
 
     writeRepospecs(repospecs, repoLocation)
 
@@ -52,6 +52,10 @@ def rmPkg(pkgName, repoLocation):
 
     pkgs = [x for x in repospecs.pkgs if x.name != pkgName]
     repospecs.pkgs = pkgs
+
+    logEntry = modlog.modifcationLogEntry("Removed package: " + pkgInfo.name)
+    repospecs.modificationLog.append(logEntry)
+    print(logEntry)
 
     writeRepospecs(repospecs, repoLocation)
     os.remove(pkgInfo.pkgLocation)
