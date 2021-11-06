@@ -4,7 +4,7 @@ import shutil
 
 '''
 This file is contains utilities to help a developer
-turn a tarball into a '.gpkg' file
+turn a tarball into a '.dmi' file
 '''
 
 class unbuiltPkgInfo:

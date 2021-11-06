@@ -14,7 +14,7 @@ A unique temporary folder must be
 created for pre-installation procedures
 to take place in
 '''
-tmpDir = "/tmp/gpkg" + str(os.getpid())
+tmpDir = "/tmp/dmi" + str(os.getpid())
 
 def install(pkgIdentifier):
     installFromFile(pkgIdentifier)
@@ -29,7 +29,7 @@ def installFromFile(pkgLocation):
     print("[Install] Creating temporary build environment")
     os.mkdir(tmpDir)
 
-    print("[Install] Opening '.gpkg' file")
+    print("[Install] Opening '.dmi' file")
     unTarPkg(pkgLocation)
 
     pkgObj = package.package(getPkgDirLocation())

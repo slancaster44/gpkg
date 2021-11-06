@@ -1,4 +1,4 @@
---- Gpkg Specification --
+--- DMI Specification --
 	-- compile.sh
 	-- postfake.sh
 	-- postinstall.sh
@@ -28,11 +28,11 @@
 			-M :: Makes an empty directory with default 'repospecs.p'
 			-A :: Adds a given package to a given repository
 			-R :: Removes a given package from a given repository
-	-- Added dmi/gpkg commands:
+	-- Added dmi commands:
 		- Da :: Adds a given repository at a given location
 		- Dr :: Removes repository at a given location
 		-- Repository information will be stored in
-		/var/lib/gpkg/reposinfo.p
+		/var/lib/dmi/reposinfo.p
 	-- repospecs.p :: Exists in every repository
 		-- Contains an instance of a 'repospecs' class
 		that contains information on the repository

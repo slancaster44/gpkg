@@ -7,7 +7,7 @@ import Utils
 
 '''
 This file contains the functions for building
-a '.gpkg' file from a given folder
+a '.dmi' file from a given folder
 '''
 
 def build(dir):
@@ -21,7 +21,7 @@ def build(dir):
 
 '''
 This function ensures the dir has the
-required files to be packaged as a '.gpkg'
+required files to be packaged as a '.dmi'
 -- 'pkginfo.json'
 -- 'compile.sh'
 -- '<somename>.tar.gz OR <somename>.tar.xz'
@@ -83,8 +83,8 @@ def checkTarball(tarball):
             sys.exit("[Build] You must have one upper level directory in tarball: " + tarball)
 
 def tarContents(dir):
-    nameOfGpkgFile = os.path.basename(dir) + ".gpkg"
+    nameOfDMIFile = os.path.basename(dir) + ".dmi"
 
-    with tarfile.open(nameOfGpkgFile, "w:xz") as tar:
+    with tarfile.open(nameOfDMIFile, "w:xz") as tar:
         tar.add(dir, arcname=os.path.basename(dir))
 

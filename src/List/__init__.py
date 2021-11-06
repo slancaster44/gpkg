@@ -37,11 +37,11 @@ def isInstalled(pkgName):
     return pkgInfo != None    
 
 def loadAllPkgs():
-    if not os.path.exists("/var/lib/gpkg/pkgdata.p"):
-        sys.exit("[List] No packages installed")
+    if not os.path.exists("/var/lib/dmi/pkgdata.p"):
+        return []
 
     setOfAllPkgs = []
-    with open("/var/lib/gpkg/pkgdata.p", "rb") as f:
+    with open("/var/lib/dmi/pkgdata.p", "rb") as f:
         while True:
             try:
                 setOfAllPkgs.append(pickle.load(f))
@@ -52,10 +52,10 @@ def loadAllPkgs():
 
 def saveListingOn(pkgdata):
     print("[List] Creating listing for: " + pkgdata.name)
-    if not os.path.exists('/var/lib/gpkg'):
-        os.mkdir('/var/lib/gpkg')
+    if not os.path.exists('/var/lib/dmi'):
+        os.mkdir('/var/lib/dmi')
 
-    with open('/var/lib/gpkg/pkgdata.p', 'ab') as f:
+    with open('/var/lib/dmi/pkgdata.p', 'ab') as f:
         pickle.dump(pkgdata, f)
 
 def removeListingOn(pkgName):
@@ -63,7 +63,7 @@ def removeListingOn(pkgName):
     allPkgs = loadAllPkgs()
     pkgsNotIncludingToBeRemoved = [x for x in allPkgs if x.name != pkgName]
 
-    with open("/var/lib/gpkg/pkgdata.p", "wb") as f:
+    with open("/var/lib/dmi/pkgdata.p", "wb") as f:
         for i in pkgsNotIncludingToBeRemoved:
             pickle.dump(i, f)
 

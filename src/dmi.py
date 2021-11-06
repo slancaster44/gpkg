@@ -9,7 +9,7 @@ import Install
 import List 
 import Remove
 
-parser = argparse.ArgumentParser(description='gpkg Package Manager')
+parser = argparse.ArgumentParser(description='Dandified Make Install -- Package Manager')
 parser.add_argument("-I", "--install",
                     metavar="<pkg_name>",
                     help="Install given package",
@@ -42,7 +42,7 @@ parser.add_argument('-B', "--build",
                    dest="bPkg")
 parser.add_argument('-Bd', "--make_build_dir",
                     metavar="<tarball>",
-                    help="Create a directory with a given tarball that can be used to create a '.gpkg' file",
+                    help="Create a directory with a given tarball that can be used to create a '.dmi' file",
                     dest="bdPkg")
 
 def install(pkg):
