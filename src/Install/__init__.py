@@ -10,6 +10,7 @@ from Install import fakerootMapper
 import List.packageMetadata as PkgMetadata
 import List
 import Repo
+import Depends
 
 '''
 A unique temporary folder must be 
@@ -166,3 +167,11 @@ def runPkgPostFakeSh(pkg):
         print("\tNo 'postfake.sh' to run")
     else:
         runSh(pkg, pkg.postFakeShLoc)
+
+def installWithDepends(pkgName):
+    print("[Install] Resolving dependencies for:", pkgName)
+
+    pkgLocations = Depends.resolveFor(pkgName) #Locations of dependencies in install order
+
+    for i in pkgLocations:
+        install(i)

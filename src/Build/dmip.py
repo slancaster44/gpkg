@@ -77,7 +77,7 @@ def mkDefaultJson(pkgInfo):
     rtrnVal += '\t"name":"' + pkgInfo.name + '",\n'
     rtrnVal += '\t"version":"' + pkgInfo.version + '",\n'
     rtrnVal += '\t"description":"'+ pkgInfo.description + '",\n'
-    rtrnVal += '\t"dependencies":'+ str(pkgInfo.dependencies) + ',\n'
+    rtrnVal += '\t"dependencies":'+ str(pkgInfo.dependencies).replace("'", '"') + ',\n'
     rtrnVal += '\t"install_options":' + str(pkgInfo.installOpts) + ',\n'
     rtrnVal += '\t"envar":"' + pkgInfo.envar + '"\n'
 
