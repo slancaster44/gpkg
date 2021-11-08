@@ -69,7 +69,7 @@ parser.add_argument("-Rs", "--searchrepos",
 def install(pkg):
     ensureRootPrivilege()
 
-    Install.install(pkg)
+    Install.installWithDepends(pkg)
 
 def remove(pkg):
     ensureRootPrivilege()

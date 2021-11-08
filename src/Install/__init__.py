@@ -171,7 +171,17 @@ def runPkgPostFakeSh(pkg):
 def installWithDepends(pkgName):
     print("[Install] Resolving dependencies for:", pkgName)
 
-    pkgLocations = Depends.resolveFor(pkgName) #Locations of dependencies in install order
+    pkgInfo = Repo.searchAll(pkgName)
+    if pkgInfo == None:
+        print("[Install] Could not find package in repository, attempting install from '*.dmi' file")
+        shouldContinue = input("\tThis will result in installation without dependency resolution. Continue? [y/N] ")
+        if shouldContinue == "Y" or shouldContinue == "y":
+            install(pkgName)
+        return
 
-    for i in pkgLocations:
-        install(i)
+    pkgLocations = Depends.resolveFor(pkgInfo) #Locations of dependencies in install order
+
+
+    
+    #for i in pkgLocations:
+    #    install(i)
