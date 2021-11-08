@@ -20,6 +20,7 @@ def mkRepo(repoLocation):
     writeRepospecs(repospecs, repoLocation)
 
 def addPkg(pkgLocation, repoLocation):
+    repoLocation = os.path.abspath(repoLocation)
     checkdir(repoLocation)
 
     pkgObj = pkg.Pkg(pkgLocation)

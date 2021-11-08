@@ -40,8 +40,8 @@ def getAbsRootPathsOf(items, root, location):
 def handleExistingItem(item):
     if os.path.isfile(item):
         print("[Fakeroot Mapper] '" + item + "' already exists")
-        shouldOverwrite = input("\tShould this item be overwritten during install [y/N] ")
-        if shouldOverwrite != "Y" and shouldOverwrite != 'y':
+        shouldOverwrite = input("\tShould this item be overwritten during install [Y/n] ")
+        if shouldOverwrite == "N" or shouldOverwrite == "n":
             sys.exit(1)
         return True
     else:
