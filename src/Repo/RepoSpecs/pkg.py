@@ -18,7 +18,7 @@ class Pkg:
         self.name = str(self.pkgInfoJson["name"])
         self.version = str(self.pkgInfoJson["version"])
         self.description = str(self.pkgInfoJson["description"])
-        self.dependencies = str(self.pkgInfoJson["dependencies"])
+        self.dependencies = self.pkgInfoJson["dependencies"]
         self.envar = str(self.pkgInfoJson["envar"])
         self.installOpts = str(self.pkgInfoJson["install_options"])
 
@@ -39,7 +39,7 @@ class Pkg:
         rtrnStr = "[Package Info]\n"
         rtrnStr += "Name: " + self.name + "\n"
         rtrnStr += "Version: " + self.version + "\n"
-        rtrnStr += "Dependencies: " + self.dependencies + "\n"
+        rtrnStr += "Dependencies: " + str(self.dependencies) + "\n"
         rtrnStr += "Description: " + self.description + "\n"
         rtrnStr += "Location: " + self.pkgLocation + "\n"
         rtrnStr += "Installation Status: " + str(self.isInstalled()) 

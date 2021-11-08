@@ -180,8 +180,16 @@ def installWithDepends(pkgName):
         return
 
     pkgLocations = Depends.resolveFor(pkgInfo) #Locations of dependencies in install order
-
+    
+    print("[Install] Must install the following packages: ")
+    for i in pkgLocations:
+        print("\t" + i)
+    
+    consent = input("[Install] Do you consent to the above packages being installed? [y/N] ")
+    if consent != "Y" and consent != "y":
+        sys.exit(1)
+    
 
     
-    #for i in pkgLocations:
-    #    install(i)
+    for i in pkgLocations:
+        install(i)

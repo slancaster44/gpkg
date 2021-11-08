@@ -9,7 +9,7 @@ class pkgMetadata:
         self.name = str(pkgInfoJson["name"])
         self.version = str(pkgInfoJson["version"])
         self.description = str(pkgInfoJson["description"])
-        self.dependencies = str(pkgInfoJson["dependencies"])
+        self.dependencies = pkgInfoJson["dependencies"]
         
     def __str__(self):
         rtrnStr = self.basicInfoAsStr()
@@ -26,7 +26,7 @@ class pkgMetadata:
         rtrnStr = "[Package Info]\n"
         rtrnStr += "Name: " + self.name + "\n"
         rtrnStr += "Version: " + self.version + "\n"
-        rtrnStr += "Dependencies: " + self.dependencies + "\n"
+        rtrnStr += "Dependencies: " + str(self.dependencies) + "\n"
 
         rtrnStr += "Description: " + self.description 
         return rtrnStr

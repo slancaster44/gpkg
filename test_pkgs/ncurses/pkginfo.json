@@ -1,0 +1,8 @@
+{
+	"name":"ncurses",
+	"version":"6.2",
+	"description":"TUI Library",
+	"dependencies":[],
+	"install_options":[],
+	"envar":"DESTDIR"
+}

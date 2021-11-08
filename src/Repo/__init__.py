@@ -15,7 +15,16 @@ def addRepo(repoLocation):
     writeRepoFile(repoLists)
 
 def rmRepo(repoLocation):
-    pass
+    repoLocation = os.path.abspath(repoLocation)
+
+    repos = getRepos()
+
+    outRepos = []
+    for i in repos:
+        if i.location != repoLocation:
+            outRepos.append(i)
+
+    writeRepoFile(outRepos)
 
 def listRepos():
     repos = getRepos()

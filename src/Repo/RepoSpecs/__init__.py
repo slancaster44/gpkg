@@ -13,8 +13,8 @@ class repoSpecs:
         for i in self.modificationLog:
             rtrnVal += str(i)
 
-        rtrnVal += "-- Packages --\n"
+        rtrnVal += "\n-- Packages --\n"
         for i in self.pkgs:
-            rtrnVal += str(i)
+            rtrnVal += "\n" + str(i) + "\n"
 
         return rtrnVal
