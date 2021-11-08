@@ -1,5 +1,6 @@
 
 import os 
+import sys
 
 def findTarballsIn(dir):
     contents = os.listdir(dir)
@@ -18,3 +19,10 @@ def pathType(item):
         return "dir"
     else:
         return "file"
+
+def ensureLibDmi():
+    if os.getuid() != 0:
+        sys.exit("Can only run this operation as root")
+
+    if not os.path.exists("/var/lib/dmi"):
+        os.mkdir("/var/lib/dmi")

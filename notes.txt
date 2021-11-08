@@ -50,7 +50,8 @@ Build Tool Commands:
 			make
 
 TODO:
-	dmir error catching support 
+	dmirepo check its '.dmi' file
+	make sure there is a /var/lib/dmi/repos.p
 
 	Add Repository support
 		1) Find programs in repository

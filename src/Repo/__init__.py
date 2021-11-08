@@ -3,6 +3,7 @@ import os
 import sys
 
 from Repo import Search
+import Utils
 
 def addRepo(repoLocation):
     repoLists = getRepos()
@@ -33,6 +34,8 @@ def listRepos():
 
 #Note: repos.p will contain a list of repospecs classes
 def getRepos():
+    Utils.ensureLibDmi()
+
     if not os.path.exists("/var/lib/dmi/repos.p"):
         return []
 

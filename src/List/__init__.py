@@ -52,8 +52,7 @@ def loadAllPkgs():
 
 def saveListingOn(pkgdata):
     print("[List] Creating listing for: " + pkgdata.name)
-    if not os.path.exists('/var/lib/dmi'):
-        os.mkdir('/var/lib/dmi')
+    Utils.ensureLibDmi()
 
     with open('/var/lib/dmi/pkgdata.p', 'ab') as f:
         pickle.dump(pkgdata, f)
