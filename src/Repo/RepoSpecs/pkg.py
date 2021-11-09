@@ -8,8 +8,7 @@ import List
 class Pkg:
     def __init__(self, location):
         self.pkgLocation = os.path.abspath(location)
-        if not os.path.exists(self.pkgLocation):
-            sys.exit("[repospecs] No such package: " + self.pkgLocation)
+        self.checkFile()
 
         self.basename = os.path.basename(location)
 
@@ -44,3 +43,11 @@ class Pkg:
         rtrnStr += "Location: " + self.pkgLocation + "\n"
         rtrnStr += "Installation Status: " + str(self.isInstalled()) 
         return rtrnStr
+
+    def checkFile(self):
+        if not os.path.exists(self.pkgLocation):
+            sys.exit("[repospecs] No such package: " + self.pkgLocation)
+        elif not os.path.isfile(self.pkgLoction):
+            sys.exit("[repospecs] Expected file, not directory: "+ self.pkgLocation)
+        elif self.pkgLocation[:-4] != ".dmi":
+            sys.exit("[repospecs] File is not '*.dmi' file: " + self.pkgLocation)
