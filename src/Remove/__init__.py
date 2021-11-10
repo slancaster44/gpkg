@@ -38,3 +38,8 @@ def handleFailedRemoval(itemName):
     if shouldContinue != "y" and shouldContinue != "Y":
         sys.exit(1)
 
+def removeOrphaned():
+    orphaned = List.listOrphanedDepends()
+
+    for i in orphaned:
+        remove(i)

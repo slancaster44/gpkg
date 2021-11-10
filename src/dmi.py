@@ -19,6 +19,10 @@ parser.add_argument("-D", "--delete",
                     metavar="<pkg_name>",
                     help="Delete a given package",
                     dest="rmPkg")
+parser.add_argument("-Do", "--deleteorphans",
+                    help='delete all orphaned dependencies',
+                    action='store_true',
+                    dest='doArg')
 parser.add_argument("-L", "--list",
                     metavar="<pkg_name>",
                     help="List information on an installed package",
@@ -29,8 +33,12 @@ parser.add_argument("-La", "--listassoc",
                     dest="laPkg")
 parser.add_argument("-Ld", "--listdeps",
                     metavar="<pkg_name>",
-                    help="List the dependencies of a given package",
+                    help="List the dependencies of an installed package",
                     dest="ldPkg")
+parser.add_argument("-Lo", "--listorphans",
+                    help='List all orphaned dependencies',
+                    action='store_true',
+                    dest='loArg')
 parser.add_argument("-Am", "--mkassoc",
                     metavar=("<file_or_dir_name>", "<pkg_name>"),
                     help="Associate given file or dir with given package",
@@ -79,6 +87,8 @@ def remove(pkg):
     ensureRootPrivilege()
     Remove.remove(pkg)
 
+def rmOrphs():
+    Remove.removeOrphaned()
 
 def listPkg(pkg):
     List.listPkg(pkg)
@@ -112,6 +122,10 @@ def rmRepo(repoLocation):
 
 def lsRepos():
     Repo.listRepos()
+
+def lsOrphaned():
+    print("Orphaned Packages:")
+    print(List.listOrphanedDepends())
 
 def searchRepos(pkgName):
     print(Repo.searchAll(pkgName))
@@ -151,8 +165,12 @@ if __name__ == '__main__':
         rmRepo(args.rrArg)
     elif args.rsArg != None:
         searchRepos(args.rsArg)
+    elif args.doArg:
+        rmOrphs()
     elif args.rlArg:
         lsRepos()
+    elif args.loArg:
+        lsOrphaned()
     elif args.uArg:
         update()
     else:

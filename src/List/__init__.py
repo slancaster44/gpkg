@@ -1,6 +1,7 @@
 import os
 import sys
 import pickle
+import Depends
 
 import Utils
 from Depends import installedDepends
@@ -123,3 +124,13 @@ def associateDirWith(fileLoc, pkgData):
 def updateListing(pkgData):
     removeListingOn(pkgData.name)
     saveListingOn(pkgData)
+
+def listOrphanedDepends():
+    allInstalled = loadAllPkgs()
+    dependsTree = installedDepends.getDependsTree()
+
+    orphanedDepends = []
+    for i in allInstalled:
+        if not dependsTree.hasKey(i.name):
+            orphanedDepends.append(i.name)
+    return orphanedDepends

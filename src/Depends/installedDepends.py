@@ -62,3 +62,4 @@ def rmFromDependsTree(pkg):
     dependsTree.rmKey(pkg)
 
     writeDependsTree(dependsTree)
+
