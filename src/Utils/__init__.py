@@ -26,3 +26,6 @@ def ensureLibDmi():
 
     if not os.path.exists("/var/lib/dmi"):
         os.mkdir("/var/lib/dmi")
+        return False
+
+    return True

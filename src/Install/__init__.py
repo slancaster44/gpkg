@@ -11,6 +11,7 @@ import List.packageMetadata as PkgMetadata
 import List
 import Repo
 import Depends
+from Depends import installedDepends
 
 '''
 A unique temporary folder must be 
@@ -179,7 +180,7 @@ def installWithDepends(pkgName):
             install(pkgName)
         return
 
-    pkgLocations = Depends.resolveFor(pkgInfo) #Locations of dependencies in install order
+    pkgLocations = Depends.resolveFor(pkgInfo) #Locations of dependencies & the pkg in install order
     
     print("[Install] Must install the following packages: ")
     for i in pkgLocations:
@@ -189,7 +190,9 @@ def installWithDepends(pkgName):
     if consent != "Y" and consent != "y":
         sys.exit(1)
     
-
-    
     for i in pkgLocations:
         install(i)
+
+    #The last entry of pkgLocations will be the name of the pkg installed
+    #The rest are dependencies
+    installedDepends.addToDependsTree(pkgLocations[-1], pkgLocations[:-1])
