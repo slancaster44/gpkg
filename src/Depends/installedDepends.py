@@ -47,7 +47,7 @@ def writeDependsTree(dependsTree):
     Utils.ensureLibDmi()
 
     with open("/var/lib/dmi/depends.p", "wb") as f:
-        pickle.dumps(dependsTree, f)
+        pickle.dump(dependsTree, f)
 
 def addToDependsTree(pkg, dependencies):
     dependsTree = getDependsTree()
