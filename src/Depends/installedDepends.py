@@ -11,8 +11,8 @@ class dependsTree:
     def addEntry(self, pkgName, dependencies):
         self.tree[pkgName] = dependencies
 
-    def hasKey(self, pkg):
-        return pkg.name in self.tree.keys()
+    def hasKey(self, pkgName):
+        return pkgName in self.tree.keys()
     
     def rmKey(self, pkgName):
         del self.tree[pkgName]
@@ -24,8 +24,8 @@ class dependsTree:
         number = 0
 
         for i in self.tree.values():
-            if pkgName == i:
-                number += 1
+            for j in i:
+                if pkgName == j: number += 1
 
         return number 
 

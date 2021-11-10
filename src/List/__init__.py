@@ -131,6 +131,6 @@ def listOrphanedDepends():
 
     orphanedDepends = []
     for i in allInstalled:
-        if not dependsTree.hasKey(i.name):
+        if (not dependsTree.hasKey(i.name)) and (dependsTree.numberOfPkgsThatDependOn(i) == 0):
             orphanedDepends.append(i.name)
     return orphanedDepends
