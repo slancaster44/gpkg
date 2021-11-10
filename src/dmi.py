@@ -27,6 +27,10 @@ parser.add_argument("-La", "--listassoc",
                     metavar="<pkg_name>",
                     help="List files and directories associated with a given package",
                     dest="laPkg")
+parser.add_argument("-Ld", "--listdeps",
+                    metavar="<pkg_name>",
+                    help="List the dependencies of a given package",
+                    dest="ldPkg")
 parser.add_argument("-Am", "--mkassoc",
                     metavar=("<file_or_dir_name>", "<pkg_name>"),
                     help="Associate given file or dir with given package",
@@ -82,6 +86,9 @@ def listPkg(pkg):
 def listAssociated(pkg):
     List.listAssociated(pkg)
 
+def listDepends(pkg):
+    List.listDepends(pkg)
+
 def makeAssociation(item, pkg):
     ensureRootPrivilege()
     List.associateNewItemWithPkg(item, pkg)
@@ -132,6 +139,8 @@ if __name__ == '__main__':
         mkDmipDir(args.bdPkg)
     elif args.laPkg != None:
         listAssociated(args.laPkg)
+    elif args.ldPkg != None:
+        listDepends(args.ldPkg)
     elif args.amArgs != None:
         makeAssociation(args.amArgs[0], args.amArgs[1])
     elif args.arArgs != None:

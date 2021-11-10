@@ -3,6 +3,7 @@ import sys
 import pickle
 
 import Utils
+from Depends import installedDepends
 
 #finds package using findPkg()
 #and prints info about it
@@ -12,6 +13,15 @@ def listPkg(pkgName):
         print("[List] Package does not exist: '" + pkgName + "'")
     else:
         print(pkg.basicInfoAsStr())
+
+def listDepends(pkgName):
+    if not isInstalled(pkgName):
+        sys.exit("[List] Cannot list dependencies of package that is not installed: " + pkgName)
+
+    dependsTree = installedDepends.getDependsTree()
+    depends = dependsTree.getDependsOf(pkgName)
+
+    print("[List] Dependencies of:", pkgName, "--", depends)
 
 def listAssociated(pkgName):
     pkg = findPkg(pkgName)

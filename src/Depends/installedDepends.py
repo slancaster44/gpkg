@@ -8,20 +8,23 @@ class dependsTree:
         self.tree = {}
 
     ##Inputs should be a pkg name and a list of dependencies
-    def addEntry(self, pkg, dependencies):
-        self.tree[pkg.name] = dependencies
+    def addEntry(self, pkgName, dependencies):
+        self.tree[pkgName] = dependencies
 
     def hasKey(self, pkg):
         return pkg.name in self.tree.keys()
     
-    def rmKey(self, pkg):
-        del self.tree[pkg.name]
+    def rmKey(self, pkgName):
+        del self.tree[pkgName]
 
-    def numberOfPkgsThatDependOn(self, pkg):
+    def getDependsOf(self, pkgName):
+        return self.tree[pkgName]
+
+    def numberOfPkgsThatDependOn(self, pkgName):
         number = 0
 
         for i in self.tree.values():
-            if pkg.name in i:
+            if pkgName == i:
                 number += 1
 
         return number 
