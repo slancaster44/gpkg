@@ -47,7 +47,7 @@ class Pkg:
     def checkFile(self):
         if not os.path.exists(self.pkgLocation):
             sys.exit("[repospecs] No such package: " + self.pkgLocation)
-        elif not os.path.isfile(self.pkgLoction):
+        elif not os.path.isfile(self.pkgLocation):
             sys.exit("[repospecs] Expected file, not directory: "+ self.pkgLocation)
-        elif self.pkgLocation[:-4] != ".dmi":
+        elif self.pkgLocation[-4:] != ".dmi":
             sys.exit("[repospecs] File is not '*.dmi' file: " + self.pkgLocation)

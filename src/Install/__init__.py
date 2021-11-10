@@ -195,7 +195,7 @@ def installWithDepends(pkgName):
 
     #The last entry of pkgLocations will be the name of the pkg installed
     #The rest are dependencies. We only want a list of the dependencies
-    depends = [x.name for x in pkgLocations[:-1]]
+    depends = pkgLocations[:-1]
     print("[Install] Logging dependencies:", pkgName, "--", depends)
 
     installedDepends.addToDependsTree(pkgName, depends)
