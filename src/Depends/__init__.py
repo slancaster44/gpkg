@@ -32,9 +32,6 @@ def pkgWithAllDependencies(pkgInfo):
     pkg = Pkg(pkgInfo.name, pkgInfo.pkgLocation)
 
     for i in pkgInfo.dependencies:
-        if List.isInstalled(i):
-            print("[Depends] Dependency already installed, skipping: " + i)
-            continue 
 
         dependencyInfo = Repo.searchAll(i)
         if dependencyInfo == None:

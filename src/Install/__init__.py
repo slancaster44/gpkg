@@ -180,22 +180,23 @@ def installWithDepends(pkgName):
             install(pkgName)
         return
 
-    pkgLocations = Depends.resolveFor(pkgInfo) #Locations of dependencies & the pkg in install order
-    
+    pkgDepends = Depends.resolveFor(pkgInfo) #Locations of dependencies & the pkg in install order
+    pkgsToInstall = [x for x in pkgDepends if not List.isInstalled(x)]
+
     print("[Install] Must install the following packages: ")
-    for i in pkgLocations:
+    for i in pkgsToInstall:
         print("\t" + i)
     
     consent = input("[Install] Do you consent to the above packages being installed? [y/N] ")
     if consent != "Y" and consent != "y":
         sys.exit(1)
     
-    for i in pkgLocations:
+    for i in pkgsToInstall:
         install(i)
 
     #The last entry of pkgLocations will be the name of the pkg installed
     #The rest are dependencies. We only want a list of the dependencies
-    depends = pkgLocations[:-1]
+    depends = pkgDepends[:-1]
     print("[Install] Logging dependencies:", pkgName, "--", depends)
 
     installedDepends.addToDependsTree(pkgName, depends)
