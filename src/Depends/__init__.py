@@ -10,7 +10,8 @@ def resolveFor(pkgInfo):
     pkg = pkgWithAllDependencies(pkgInfo)
     dependencyOrder = orderedDependsOf(pkg)
 
-    return [x.location for x in dependencyOrder]
+    return [x.name for x in dependencyOrder]
+
 
 class Pkg:
     def __init__(self, name, location):
