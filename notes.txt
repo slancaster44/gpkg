@@ -50,23 +50,10 @@ Build Tool Commands:
 			make
 
 TODO:
-    handle empty compile.sh errors
+	Enable creation of package listing without
+	requiring that that package is installed;
 
-	Add Repository support
-		1) Find programs in repository
-			A) Add/rm repo
-			B) Search repos
-		2) Install programs from repository
-	
-	Dependency Resolution
-		1) Find dependencies in repository
-		2) Mapp proper install order of depndencies
-		3) Install dependencies & program
+	This way we cann associate files with a
+	listing when a package does not use make install
 
-	Dependency Removal
-		1) Find orphaned dependencies
-		2) Remove orphaned dependencies
 
-	Upgrade Package from Repository
-
-	Rebrand from GPKG to DMI #Dandified Make Install

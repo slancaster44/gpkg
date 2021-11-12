@@ -56,11 +56,11 @@ def installFromFile(pkgLocation):
     fakeRootLoc = mkFakeroot(pkgObj)
     installPkgToFakeRoot(pkgObj, fakeRootLoc)
 
-    print("[Install] Mapping fakeroot")
-    fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
-
     print("[Install] Running postfake.sh")
     runPkgPostFakeSh(pkgObj, fakeRootLoc)
+
+    print("[Install] Mapping fakeroot")
+    fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
     
     print("[Install] Installing to trueroot")
     installPkgFromFkRoot(fkrtMap, fakeRootLoc)
