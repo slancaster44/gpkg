@@ -38,6 +38,7 @@ def remove(pkgName):
             handleFailedRemoval(i)
 
     List.removeListingOn(pkgName)
+    installedDepends.rmFromDependsTree(pkgName)
 
 def handleFailedRemoval(itemName):
     print("[Remove] Could not delete item '" + itemName + "'")
