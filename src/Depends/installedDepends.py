@@ -39,7 +39,10 @@ def getDependsTree():
         return dependsTree()
 
     with open("/var/lib/dmi/depends.p", "rb") as f:
-       return pickle.load(f)
+        try:
+            return pickle.load(f)
+        except EOFError:
+            return dependsTree()
 
     return None
 
