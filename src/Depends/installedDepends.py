@@ -58,8 +58,11 @@ def addToDependsTree(pkg, dependencies):
 
 def rmFromDependsTree(pkg):
     dependsTree = getDependsTree()
-
-    dependsTree.rmKey(pkg)
+    
+    try:
+        dependsTree.rmKey(pkg)
+    except KeyError:
+        pass
 
     writeDependsTree(dependsTree)
 

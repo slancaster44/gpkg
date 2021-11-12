@@ -38,6 +38,8 @@ def remove(pkgName):
             handleFailedRemoval(i)
 
     List.removeListingOn(pkgName)
+
+    print("[Remove] Removing dependency tracking for: " + pkgName)
     installedDepends.rmFromDependsTree(pkgName)
 
 def handleFailedRemoval(itemName):
