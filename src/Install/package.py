@@ -1,6 +1,6 @@
 import os
 import json
-
+import sys
 
 import Utils
 
@@ -28,10 +28,13 @@ class package:
         self.extractedContents = []
 
     def getPkgInfoLocation(self):
-        return self.directory + "/" + "pkginfo.json"
+        return self.directory + "/pkginfo.json"
 
     def getCompileShLocation(self):
-        return self.directory + "/" + "compile.sh"
+        if not "compile.sh" in self.dirContents:
+            return None
+        else:
+            return self.directory + "/" + "compile.sh"
 
     def getPostFakeShLoc(self):
         if not "postfake.sh" in self.dirContents:
@@ -50,8 +53,14 @@ class package:
         return self.directory + "/" + tarballName 
     
     def getPkgInfoContents(self):
+        retVal = None
         with open(self.pkgInfoLoc, 'r') as f:
-            return json.load(f)
+            try:
+                retVal = json.load(f)
+            except:
+                sys.exit("[Package] Cannot load json: " + self.pkgInfoLoc)
+        return retVal
+        
 
     def getName(self):
         return self.pkgInfoContents["name"]

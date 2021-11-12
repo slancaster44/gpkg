@@ -110,18 +110,23 @@ def installPkgFromFkRoot(fkrtMap, fkrtLocation):
 
 #TODO: Does build accept the envar as install opt? It shouldn't
 def installPkgToFakeRoot(pkg, location):
-        cmd = ["make"]
-        
-        if pkg.installOpts != None:
-            cmd += pkg.installOpts
-        
-        cmd += [pkg.envar+"="+location, "install"]
-        returnCode = subprocess.run(cmd).returncode
-        if returnCode != 0:
-            handleFailedScript("make install")
+    extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
-def handleFailedScript(scriptName):
-    print("[Build] Script returned non-zero value: " + scriptName)
+    os.chdir(extractedDir)
+
+    cmd = ["make"]
+    
+    if pkg.installOpts != None:
+        cmd += pkg.installOpts
+    print(os.listdir())
+    
+    cmd += [pkg.envar+"="+location, "install"]
+    returnCode = subprocess.run(cmd).returncode
+    if returnCode != 0:
+        handleFailedScript(str(cmd), returnCode)
+
+def handleFailedScript(scriptName, retCode):
+    print("[Build] Script returned non-zero value ("+str(retCode)+"): " + scriptName)
     shouldContinue = input("\tShould we continue with the installation process? [y/N] ")
     if shouldContinue != 'Y' and shouldContinue != 'y':
         sys.exit(1)
@@ -142,20 +147,30 @@ def openPkgTarball(pkg):
                                             #it gets counted as an extracted item
 
 def runSh(pkg, scriptName):
-    firstExtractedItem = pkg.directory + "/" + pkg.extractedContents[0]
+    extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
-    os.chdir(firstExtractedItem)
-    scriptLocation = firstExtractedItem + "/" + os.path.basename(scriptName)
+    os.chdir(extractedDir)
+    scriptLocation = extractedDir + "/" + os.path.basename(scriptName)
     shutil.copyfile(scriptName, scriptLocation)
 
-    os.chmod(scriptLocation, stat.S_IEXEC) #marks compilation script as executable
-    returnCode = subprocess.run([scriptLocation]).returncode
+    os.chmod(scriptLocation, stat.S_IEXEC) #marks script as executable
+
+    returnCode = 0
+    try:
+        returnCode = subprocess.run([scriptLocation]).returncode
+    except:
+        returnCode = 0.5
+
     if returnCode != 0:
-        handleFailedScript(scriptName)
+        handleFailedScript(scriptName, returnCode)
 
 
 def runPkgCompileSh(pkg):
-    runSh(pkg, pkg.compileShLoc)
+    if pkg.compileShLoc == None:
+        print("\tNo 'compile.sh' to run")
+    else:
+        runSh(pkg, pkg.compileShLoc)
+    
 
 def runPkgPostInstallSh(pkg):
     if pkg.postInstallShLoc == None:

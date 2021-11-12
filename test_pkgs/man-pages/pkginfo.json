@@ -1,0 +1,8 @@
+{
+	"name":"man-pages",
+	"version":"5.13",
+	"description":"2200 Man Pages",
+	"dependencies":[],
+	"install_options":["prefix=/usr"],
+	"envar":"DESTDIR"
+}

@@ -50,7 +50,7 @@ Build Tool Commands:
 			make
 
 TODO:
-	dmirepo check its '.dmi' file
+    handle empty compile.sh errors
 
 	Add Repository support
 		1) Find programs in repository

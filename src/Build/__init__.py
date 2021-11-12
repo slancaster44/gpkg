@@ -34,7 +34,7 @@ def checkContents(dir):
     checkTarball(dir + "/" + listOfTarballs[0])
 
     listOfCompileScripts = Utils.findCompileScriptsIn(dir)
-    if len(listOfCompileScripts) != 1:
+    if len(listOfCompileScripts) > 1:
         sys.exit("[Build] Can only build package that contains one 'compile.sh'")
 
     listOfPkgInfoJsons = Utils.findPkgInfosIn(dir)
