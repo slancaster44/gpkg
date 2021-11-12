@@ -60,7 +60,7 @@ def installFromFile(pkgLocation):
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
 
     print("[Install] Running postfake.sh")
-    runPkgPostFakeSh(pkgObj)
+    runPkgPostFakeSh(pkgObj, fakeRootLoc)
     
     print("[Install] Installing to trueroot")
     installPkgFromFkRoot(fkrtMap, fakeRootLoc)
@@ -118,7 +118,6 @@ def installPkgToFakeRoot(pkg, location):
     
     if pkg.installOpts != None:
         cmd += pkg.installOpts
-    print(os.listdir())
     
     cmd += [pkg.envar+"="+location, "install"]
     returnCode = subprocess.run(cmd).returncode
@@ -146,7 +145,7 @@ def openPkgTarball(pkg):
                                             #have the same name as an old one,
                                             #it gets counted as an extracted item
 
-def runSh(pkg, scriptName):
+def runSh(pkg, scriptName, args=[]):
     extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
     os.chdir(extractedDir)
@@ -157,7 +156,7 @@ def runSh(pkg, scriptName):
 
     returnCode = 0
     try:
-        returnCode = subprocess.run([scriptLocation]).returncode
+        returnCode = subprocess.run([scriptLocation] + args).returncode
     except:
         returnCode = 0.5
 
@@ -178,11 +177,11 @@ def runPkgPostInstallSh(pkg):
     else:
         runSh(pkg, pkg.postInstallShLoc)
 
-def runPkgPostFakeSh(pkg):
+def runPkgPostFakeSh(pkg, postFakeLoc):
     if pkg.postFakeShLoc == None:
         print("\tNo 'postfake.sh' to run")
     else:
-        runSh(pkg, pkg.postFakeShLoc)
+        runSh(pkg, pkg.postFakeShLoc, args=[postFakeLoc])
 
 def installWithDepends(pkgName):
     print("[Install] Resolving dependencies for:", pkgName)
