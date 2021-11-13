@@ -6,6 +6,7 @@ import os
 import Build
 import Build.dmip as dmip
 import Install
+from Install import mklisting
 import List 
 import Remove
 import Repo
@@ -39,6 +40,10 @@ parser.add_argument("-Lo", "--listorphans",
                     help='List all orphaned dependencies',
                     action='store_true',
                     dest='loArg')
+parser.add_argument("-Lm", "--mklisting",
+                    action="store_true",
+                    help="Create empty listing",
+                    dest="lmPkg")
 parser.add_argument("-Am", "--mkassoc",
                     metavar=("<file_or_dir_name>", "<pkg_name>"),
                     help="Associate given file or dir with given package",
@@ -98,6 +103,9 @@ def listAssociated(pkg):
 
 def listDepends(pkg):
     List.listDepends(pkg)
+
+def mkListing():
+    mklisting.mkListing()
 
 def makeAssociation(item, pkg):
     ensureRootPrivilege()
@@ -169,6 +177,8 @@ if __name__ == '__main__':
         rmOrphs()
     elif args.rlArg:
         lsRepos()
+    elif args.lmPkg:
+        mkListing()
     elif args.loArg:
         lsOrphaned()
     elif args.uArg:

@@ -2,8 +2,6 @@ import os
 import re
 import sys
 
-import pickle
-
 class FakerootMap:
     def __init__(self):
 
