@@ -24,6 +24,7 @@ class package:
         self.installOpts = self.getInstallOpts()
         self.envar = self.getEnvar()
         self.dependencies = self.getDependencies()
+        self.installFromBuildDir = self.getInstallFromBuildDir()
 
         self.extractedContents = []
 
@@ -79,3 +80,6 @@ class package:
 
     def getEnvar(self):
         return self.pkgInfoContents["envar"]
+
+    def getInstallFromBuildDir(self):
+        return self.pkgInfoContents["from_builddir"]

@@ -9,6 +9,7 @@
 		-- Install Options
 			DESTDIR not valid option
 		-- Dependencies
+		-- from_builddir
 	-- tarball
 
 -- Installation Process

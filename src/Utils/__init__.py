@@ -20,6 +20,7 @@ def pathType(item):
     else:
         return "file"
 
+
 def ensureLibDmi():
     if os.getuid() != 0:
         sys.exit("Can only run this operation as root")
@@ -29,3 +30,9 @@ def ensureLibDmi():
         return False
 
     return True
+
+def shouldContinue():
+
+    shouldWe = input("Continue? [y/N] ")
+    if shouldWe != "Y" and shouldWe != "y":
+        sys.exit()

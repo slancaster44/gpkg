@@ -12,6 +12,7 @@ import List
 import Repo
 import Depends
 from Depends import installedDepends
+import Utils
 
 '''
 A unique temporary folder must be 
@@ -51,18 +52,23 @@ def installFromFile(pkgLocation):
 
     print("[Install] Running 'compile.sh'")
     runPkgCompileSh(pkgObj)
+    Utils.shouldContinue()
 
     print("[Install] Installing to fakeroot")
     fakeRootLoc = mkFakeroot(pkgObj)
     installPkgToFakeRoot(pkgObj, fakeRootLoc)
+    Utils.shouldContinue()
 
     print("[Install] Running postfake.sh")
     runPkgPostFakeSh(pkgObj, fakeRootLoc)
+    Utils.shouldContinue()
 
     print("[Install] Mapping fakeroot")
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
     
     print("[Install] Installing to trueroot")
+    print(fkrtMap)
+    Utils.shouldContinue()
     installPkgFromFkRoot(fkrtMap, fakeRootLoc)
 
     pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
@@ -109,17 +115,19 @@ def installPkgFromFkRoot(fkrtMap, fkrtLocation):
         shutil.copyfile(locationInFkrt, i)
 
 #TODO: Does build accept the envar as install opt? It shouldn't
-def installPkgToFakeRoot(pkg, location):
+def installPkgToFakeRoot(pkg, fkrtlocation):
     extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
     os.chdir(extractedDir)
+    if pkg.installFromBuildDir:
+        os.chdir(extractedDir + "/build")
 
     cmd = ["make"]
     
     if pkg.installOpts != None:
         cmd += pkg.installOpts
     
-    cmd += [pkg.envar+"="+location, "install"]
+    cmd += [pkg.envar+"="+fkrtlocation, "install"]
     returnCode = subprocess.run(cmd).returncode
     if returnCode != 0:
         handleFailedScript(str(cmd), returnCode)

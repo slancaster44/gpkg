@@ -54,7 +54,7 @@ def checkJson(jsonFileLocation):
     ##Make sure the items required in pkginfo.json are there
     requiredItems = ['name', 'version', 
     'description', 'dependencies', 
-    'install_options', 'envar']
+    'install_options', 'envar', 'from_builddir']
 
     for i in requiredItems:
         if not i in jsonContents.keys():
@@ -62,8 +62,9 @@ def checkJson(jsonFileLocation):
 
     itemsThatShouldBeStrings = ['name', 'version', 'description', 'envar']
     itemsThatShouldBeLists = ['install_options', 'dependencies']
+    itemsThatShouldBeBools = ['from_builddir']
 
-    ## Type check items in 'pkginf.json'
+    ## Type check items in 'pkginfo.json'
     for i in itemsThatShouldBeStrings:
         item = jsonContents[i]
         if not isinstance(item, str):
@@ -72,6 +73,11 @@ def checkJson(jsonFileLocation):
     for i in itemsThatShouldBeLists:
         item = jsonContents[i]
         if not isinstance(item, list) and item != None:
+            sys.exit("[Build] Variable in 'pkginfo.json' must be stored as list: " + i)
+
+    for i in itemsThatShouldBeBools:
+        item = jsonContents[i]
+        if not isinstance(item, bool) and item != None:
             sys.exit("[Build] Variable in 'pkginfo.json' must be stored as list: " + i)
 
 def checkTarball(tarball):
