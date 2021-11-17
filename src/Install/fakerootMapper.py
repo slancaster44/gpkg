@@ -24,6 +24,7 @@ def mapFakeroot(location):
 
     for root, dirs, files in os.walk(location):
         dirs = getAbsRootPathsOf(dirs, root, location)
+        dirs = [x for x in dirs if os.path.exists(x)]
         files = getAbsRootPathsOf(files, root, location)
 
         fkmap.files += files
