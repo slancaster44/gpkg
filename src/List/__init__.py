@@ -114,11 +114,11 @@ def associateFileWith(fileLoc, pkgData):
     pkgData.fakeRootMap.files.append(fileLoc)
     updateListing(pkgData)
 
-def associateDirWith(fileLoc, pkgData):
-    if fileLoc in pkgData.fakeRootMap.dirs:
-        sys.exit("[List] "+ fileLoc +" is already associated with "+pkgData.name)
+def associateDirWith(dirLoc, pkgData):
+    if dirLoc in pkgData.fakeRootMap.dirs:
+        sys.exit("[List] "+ dirLoc +" is already associated with "+pkgData.name)
 
-    pkgData.fakeRootMap.dirs.append(fileLoc)
+    pkgData.fakeRootMap.dirs.append(dirLoc)
     updateListing(pkgData)
 
 def updateListing(pkgData):

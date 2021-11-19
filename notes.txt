@@ -58,3 +58,12 @@ TODO:
 	listing when a package does not use make install
 
 
+Install Process:
+	-- Extract files
+	-- Run compile.sh
+	-- Install to fakeroot
+	-- Run postfake.sh
+	-- Install to true root
+	-- Run postfake.sh on true root
+	-- Run postinstall.sh
+	-- Exit

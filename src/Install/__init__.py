@@ -37,6 +37,9 @@ def installFromFile(pkgLocation):
     if not os.path.exists(pkgLocation):
         sys.exit("[Install] Cannot install package, file does not exist: " + pkgLocation)
 
+    if not os.path.isfile(pkgLocation):
+        sys.exit("[Install] Can only install from file")
+
     print("[Install] Creating temporary build environment")
     os.mkdir(tmpDir)
 
@@ -69,10 +72,12 @@ def installFromFile(pkgLocation):
     print("[Install] Installing to trueroot")
     print(fkrtMap)
     Utils.shouldContinue()
-    installPkgFromFkRoot(fkrtMap, fakeRootLoc)
 
     pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
     List.saveListingOn(pkgData)
+
+    installPkgToTrueRoot(pkgObj)
+    runPkgPostFakeSh(pkgObj, "/") 
 
     print("[Install] Running 'postinstall.sh'")
     runPkgPostInstallSh(pkgObj)
@@ -97,22 +102,22 @@ def mkFakeroot(pkgObj):
     os.mkdir(fakeRootLoc)
     return fakeRootLoc
 
-def installPkgFromFkRoot(fkrtMap, fkrtLocation):
-    #This sorts the directories into the order they need to be created, by 
-    #sorting them by depth in the root ('/') heirarchy. We figure out the depth
-    #by counting the number of '/' in the name of the directory
-    dirsSortedByHeirachy = sorted(fkrtMap.dirs, key=lambda dir: dir.count('/'))
+def installPkgToTrueRoot(pkg):
+    extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
-    #Create the necessary directories:
-    for i in dirsSortedByHeirachy:
-        print("[Install] Making directory: " + i)
-        os.mkdir(i)
+    os.chdir(extractedDir)
+    if pkg.installFromBuildDir:
+        os.chdir(extractedDir + "/build")
 
-    #Move the files to the directories:
-    for i in fkrtMap.files:
-        print("[Install] Installing file: " + i)
-        locationInFkrt = fkrtLocation + i
-        shutil.copyfile(locationInFkrt, i)
+    cmd = ["make"]
+    
+    if pkg.installOpts != None:
+        cmd += pkg.installOpts
+    
+    cmd += ["install"]
+    returnCode = subprocess.run(cmd).returncode
+    if returnCode != 0:
+        handleFailedScript(str(cmd), returnCode)
 
 #TODO: Does build accept the envar as install opt? It shouldn't
 def installPkgToFakeRoot(pkg, fkrtlocation):
