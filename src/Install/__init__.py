@@ -59,7 +59,6 @@ def installFromFile(pkgLocation):
     print("[Install] Installing to fakeroot")
     fakeRootLoc = mkFakeroot(pkgObj)
     installPkgToFakeRoot(pkgObj, fakeRootLoc)
-    Utils.shouldContinue()
 
     print("[Install] Running postfake.sh")
     runPkgPostFakeSh(pkgObj, fakeRootLoc)
@@ -143,7 +142,7 @@ def installPkgToFakeRoot(pkg, fkrtlocation):
 
 def handleFailedScript(scriptName, retCode):
     print("[Build] Script returned non-zero value ("+str(retCode)+"): " + scriptName)
-    shouldContinue = input("\tShould we continue with the installation process? [y/N] ")
+    Utils.shouldContinue()
     if shouldContinue != 'Y' and shouldContinue != 'y':
         sys.exit(1)
 
@@ -218,9 +217,8 @@ def installWithDepends(pkgName):
     for i in pkgsToInstall:
         print("\t" + i)
     
-    consent = input("[Install] Do you consent to the above packages being installed? [y/N] ")
-    if consent != "Y" and consent != "y":
-        sys.exit(1)
+    consent = input("[Install] The above files will be installed")
+    Utils.shouldContinue()
     
     for i in pkgsToInstall:
         install(i)
