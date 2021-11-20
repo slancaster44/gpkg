@@ -79,6 +79,13 @@ def checkJson(jsonFileLocation):
         item = jsonContents[i]
         if not isinstance(item, bool) and item != None:
             sys.exit("[Build] Variable in 'pkginfo.json' must be stored as list: " + i)
+    
+    ##If the envar is an option in the install_opts
+    ##The install to the fakeroot will fail;
+    envar = jsonContents['envar']
+    for i in jsonContents['install_options']:
+        if envar in i:
+            sys.exit("[Build] Cannot set envar in install_options")
 
 def checkTarball(tarball):
     ##Ensure that tarball contains 1 upper level directory
