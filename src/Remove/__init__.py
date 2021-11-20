@@ -26,7 +26,7 @@ def remove(pkgName):
             print("[Remove] Removing file: " + i)
             os.remove(i)
         except Exception as e:
-            print("[Remove]", type(e).__name__, "-->", str(e))   #TODO: MOve to handlefailed     
+            print("[Remove]", type(e).__name__, "-->", str(e))     
             handleFailedRemoval(i)
         
     for i in dirsToBeRemoved:

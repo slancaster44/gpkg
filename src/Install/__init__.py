@@ -123,7 +123,8 @@ def installPkgToFakeRoot(pkg, fkrtlocation):
 
     print("[Install] Creating copy of tarball files...")
     extractedDirCopy = extractedDir + ".copy.d"
-    shutil.copytree(extractedDir, extractedDirCopy)
+    shutil.copytree(extractedDir, extractedDirCopy,  
+        symlinks=True, ignore_dangling_symlinks=True)
 
     os.chdir(extractedDirCopy)
     if pkg.installFromBuildDir:
