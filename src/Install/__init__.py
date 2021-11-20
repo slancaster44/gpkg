@@ -55,7 +55,6 @@ def installFromFile(pkgLocation):
 
     print("[Install] Running 'compile.sh'")
     runPkgCompileSh(pkgObj)
-    Utils.shouldContinue()
 
     print("[Install] Installing to fakeroot")
     fakeRootLoc = mkFakeroot(pkgObj)
@@ -64,24 +63,23 @@ def installFromFile(pkgLocation):
 
     print("[Install] Running postfake.sh")
     runPkgPostFakeSh(pkgObj, fakeRootLoc)
-    Utils.shouldContinue()
 
     print("[Install] Mapping fakeroot")
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
     
-    print("[Install] Installing to trueroot")
     print(fkrtMap)
     Utils.shouldContinue()
 
-    pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
-    List.saveListingOn(pkgData)
-
+    print("[Install] Installing to trueroot")
     installPkgToTrueRoot(pkgObj)
     runPkgPostFakeSh(pkgObj, "/") 
 
     print("[Install] Running 'postinstall.sh'")
     runPkgPostInstallSh(pkgObj)
-
+    
+    pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
+    List.saveListingOn(pkgData)
+    
     print("[Install] Removing temporary build environment")
     shutil.rmtree(tmpDir)
 
@@ -115,23 +113,28 @@ def installPkgToTrueRoot(pkg):
         cmd += pkg.installOpts
     
     cmd += ["install"]
+    print("[Install] Running 'make install'")
     returnCode = subprocess.run(cmd).returncode
     if returnCode != 0:
         handleFailedScript(str(cmd), returnCode)
 
-#TODO: Does build accept the envar as install opt? It shouldn't
 def installPkgToFakeRoot(pkg, fkrtlocation):
     extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
-    os.chdir(extractedDir)
+    print("[Install] Creating copy of tarball files...")
+    extractedDirCopy = extractedDir + ".copy.d"
+    shutil.copytree(extractedDir, extractedDirCopy)
+
+    os.chdir(extractedDirCopy)
     if pkg.installFromBuildDir:
-        os.chdir(extractedDir + "/build")
+        os.chdir(extractedDirCopy + "/build")
 
     cmd = ["make"]
     
     if pkg.installOpts != None:
         cmd += pkg.installOpts
     
+    print("[Install] Running 'make install'...")
     cmd += [pkg.envar+"="+fkrtlocation, "install"]
     returnCode = subprocess.run(cmd).returncode
     if returnCode != 0:
@@ -154,9 +157,9 @@ def openPkgTarball(pkg):
     pkg.extractedContents = os.listdir(pkg.directory) #Put everything in extracted
     for i in oldContents:
         pkg.extractedContents.remove(i) #Remove old stuff from extracted
-                                            #This ensures that if a new file
-                                            #have the same name as an old one,
-                                            #it gets counted as an extracted item
+                                        #This ensures that if a new file
+                                        #have the same name as an old one,
+                                        #it gets counted as an extracted item
 
 def runSh(pkg, scriptName, args=[]):
     extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
