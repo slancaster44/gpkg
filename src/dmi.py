@@ -4,7 +4,7 @@ import sys
 import os
 
 import Build
-import Build.dmip as dmip
+import Build.buildfromtar as dmip
 import Install
 from Install import mklisting
 import List 
