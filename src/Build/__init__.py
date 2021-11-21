@@ -90,7 +90,7 @@ def checkJson(jsonFileLocation):
 def checkTarball(tarball):
     ##Ensure that tarball contains 1 upper level directory
     with tarfile.open(tarball, "r") as f:
-        upperLevelMembers = [x for x in f.getmembers() if not "/" in x.name]
+        upperLevelMembers = [x for x in f.getmembers() if not "/" in x.name[:-1]]
             
         if len(upperLevelMembers) != 1:
             sys.exit("[Build] You must have one upper level directory in tarball: " + tarball)

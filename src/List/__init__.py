@@ -95,7 +95,7 @@ def associateNewItemWithPkg(itemLocation, pkgName):
     absItemLoc = os.path.abspath(itemLocation)
 
     if not os.path.exists(itemLocation):
-        sys.exit("[List] Cannot associate non-expkgData.nameistant file: " + absItemLoc)
+        sys.exit("[List] Cannot associate non-existant file: " + absItemLoc)
 
     pkgData = findPkg(pkgName)
     if pkgData == None:
