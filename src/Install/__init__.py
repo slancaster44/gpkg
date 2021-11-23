@@ -67,6 +67,7 @@ def installFromFile(pkgLocation):
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
     
     print(fkrtMap)
+    print("The above files and directories will be installed")
     Utils.shouldContinue()
 
     print("[Install] Installing to trueroot")
@@ -106,12 +107,8 @@ def installPkgToTrueRoot(pkg):
     if pkg.installFromBuildDir:
         os.chdir(extractedDir + "/build")
 
-    cmd = ["make"]
+    cmd = mkInstallCmd(pkg, "/")
     
-    if pkg.installOpts != None:
-        cmd += pkg.installOpts
-    
-    cmd += ["install"]
     print("[Install] Running 'make install'")
     returnCode = subprocess.run(cmd).returncode
     if returnCode != 0:
@@ -129,23 +126,43 @@ def installPkgToFakeRoot(pkg, fkrtlocation):
     if pkg.installFromBuildDir:
         os.chdir(extractedDirCopy + "/build")
 
-    cmd = ["make"]
-    
-    if pkg.installOpts != None:
-        cmd += pkg.installOpts
-    
-    print("[Install] Running 'make install'...")
-    cmd += [pkg.envar+"="+fkrtlocation, "install"]
+    cmd = mkInstallCmd(pkg, fkrtlocation)
     returnCode = subprocess.run(cmd).returncode
     if returnCode != 0:
         handleFailedScript(str(cmd), returnCode)
+
+def mkInstallCmd(pkg, fkrootLocation):
+
+    cmd = ["make"]
+
+    #If the DESTDIR is set as a cmd option, we need to insert
+    #the fakeroot location into DESTDIR option so that 
+    #DESTDIR=$FAKEROOT/<install location>
+
+    hasSetEnvar = False
+    for i in pkg.installOpts:
+        if '=' in i:
+            parts = i.split('=')
+            if parts[0] == pkg.envar:
+                opt = pkg.envar + "=" + fkrootLocation + ''.join(parts[1:])
+                cmd.append(opt)
+                hasSetEnvar = True
+            else:
+                cmd.append(i)
+        else:
+            cmd.append(i)
+
+    if not hasSetEnvar:
+        cmd += [pkg.envar+"="+fkrootLocation]
+
+    return cmd + ["install"]
 
 def handleFailedScript(scriptName, retCode):
     print("[Build] Script returned non-zero value ("+str(retCode)+"): " + scriptName)
     Utils.shouldContinue()
     if shouldContinue != 'Y' and shouldContinue != 'y':
         sys.exit(1)
-
+    
 def openPkgTarball(pkg):
     oldContents = pkg.dirContents
 

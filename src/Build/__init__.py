@@ -37,6 +37,8 @@ def checkContents(dir):
     if len(listOfCompileScripts) > 1:
         sys.exit("[Build] Can only build package that contains one 'compile.sh'")
 
+    #TODO only one postfake & postinstall too
+
     listOfPkgInfoJsons = Utils.findPkgInfosIn(dir)
     if len(listOfPkgInfoJsons) != 1:
         sys.exit("[Build] Can only build package that contains one 'pkginfo.json'")
@@ -54,7 +56,8 @@ def checkJson(jsonFileLocation):
     ##Make sure the items required in pkginfo.json are there
     requiredItems = ['name', 'version', 
     'description', 'dependencies', 
-    'install_options', 'envar', 'from_builddir']
+    'install_options', 'envar', 
+    'from_builddir']
 
     for i in requiredItems:
         if not i in jsonContents.keys():
@@ -79,13 +82,6 @@ def checkJson(jsonFileLocation):
         item = jsonContents[i]
         if not isinstance(item, bool) and item != None:
             sys.exit("[Build] Variable in 'pkginfo.json' must be stored as list: " + i)
-    
-    ##If the envar is an option in the install_opts
-    ##The install to the fakeroot will fail;
-    envar = jsonContents['envar']
-    for i in jsonContents['install_options']:
-        if envar in i:
-            sys.exit("[Build] Cannot set envar in install_options")
 
 def checkTarball(tarball):
     ##Ensure that tarball contains 1 upper level directory
@@ -100,7 +96,8 @@ def checkTarball(tarball):
         if len(upperLevelMembers) > 1:
             sys.exit("[Build] You must have one upper level directory in tarball: " + tarball)
 
-        allMembersWithSameUpperLevel = [x for x in members if x.name.split('/')[0] == members[0].name.split('/')[0]]
+        allMembersWithSameUpperLevel = \
+            [x for x in members if x.name.split('/')[0] == members[0].name.split('/')[0]]
         if len(allMembersWithSameUpperLevel) < len(members):
             sys.exit("[Build] You must have one upper level directory in tarball: " + tarball)
 
