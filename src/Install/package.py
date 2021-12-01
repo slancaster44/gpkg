@@ -25,6 +25,7 @@ class package:
         self.envar = self.getEnvar()
         self.dependencies = self.getDependencies()
         self.installFromBuildDir = self.getInstallFromBuildDir()
+        self.runMakeInstall - self.getRunMakeInstall()
 
         self.extractedContents = []
 
@@ -83,3 +84,6 @@ class package:
 
     def getInstallFromBuildDir(self):
         return self.pkgInfoContents["from_builddir"]
+
+    def getRunMakeInstall(self):
+        return self.pkgInfoContents["run_makeinstall"]

@@ -58,7 +58,9 @@ def installFromFile(pkgLocation):
 
     print("[Install] Installing to fakeroot")
     fakeRootLoc = mkFakeroot(pkgObj)
-    installPkgToFakeRoot(pkgObj, fakeRootLoc)
+
+    if pkgObj.runMakeInstall:
+        installPkgToFakeRoot(pkgObj, fakeRootLoc)
 
     print("[Install] Running postfake.sh")
     runPkgPostFakeSh(pkgObj, fakeRootLoc)
@@ -71,7 +73,9 @@ def installFromFile(pkgLocation):
     Utils.shouldContinue()
 
     print("[Install] Installing to trueroot")
-    installPkgToTrueRoot(pkgObj)
+    if pkgObj.runMakeInstall:
+        installPkgToTrueRoot(pkgObj)
+        
     runPkgPostFakeSh(pkgObj, "/") 
 
     print("[Install] Running 'postinstall.sh'")

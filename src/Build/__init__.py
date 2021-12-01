@@ -65,7 +65,7 @@ def checkJson(jsonFileLocation):
 
     itemsThatShouldBeStrings = ['name', 'version', 'description', 'envar']
     itemsThatShouldBeLists = ['install_options', 'dependencies']
-    itemsThatShouldBeBools = ['from_builddir']
+    itemsThatShouldBeBools = ['from_builddir', 'run_makeinstall']
 
     ## Type check items in 'pkginfo.json'
     for i in itemsThatShouldBeStrings:
