@@ -57,7 +57,7 @@ def checkJson(jsonFileLocation):
     requiredItems = ['name', 'version', 
     'description', 'dependencies', 
     'install_options', 'envar', 
-    'from_builddir']
+    'from_builddir', 'run_makeinstall']
 
     for i in requiredItems:
         if not i in jsonContents.keys():
