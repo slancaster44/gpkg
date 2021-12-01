@@ -25,7 +25,7 @@ class package:
         self.envar = self.getEnvar()
         self.dependencies = self.getDependencies()
         self.installFromBuildDir = self.getInstallFromBuildDir()
-        self.runMakeInstall - self.getRunMakeInstall()
+        self.runMakeInstall = self.getRunMakeInstall()
 
         self.extractedContents = []
 
