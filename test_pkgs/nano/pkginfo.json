@@ -1,0 +1,8 @@
+{
+	"name":"nano",
+	"version":"5.9",
+	"description":"GNU Text Editor",
+	"dependencies":[],
+	"install_options":[],
+	"envar":"DESTDIR"
+}

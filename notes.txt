@@ -1,0 +1,69 @@
+--- DMI Specification --
+	-- compile.sh
+	-- postfake.sh
+	-- postinstall.sh
+	-- pkginfo.json
+		-- Name
+		-- Version
+		-- Description
+		-- Install Options
+			DESTDIR not valid option
+		-- Dependencies
+		-- from_builddir
+	-- tarball
+
+-- Installation Process
+	-- untar tarball in tmp dir
+	-- compile.sh
+	-- set fakeroot
+	-- run install
+	-- run postfake.sh
+	-- map files, and save file listings 
+	-- save copy of pkginfo
+	-- relocate package OR create symlinks to all?
+	-- postinstall.sh
+
+-- Repository Specification:
+	-- dmir tool Specification
+		Commands:
+			-M :: Makes an empty directory with default 'repospecs.p'
+			-A :: Adds a given package to a given repository
+			-R :: Removes a given package from a given repository
+	-- Added dmi commands:
+		- Da :: Adds a given repository at a given location
+		- Dr :: Removes repository at a given location
+		-- Repository information will be stored in
+		/var/lib/dmi/reposinfo.p
+	-- repospecs.p :: Exists in every repository
+		-- Contains an instance of a 'repospecs' class
+		that contains information on the repository
+			-- Package list
+			-- Modification record
+
+Build Tool Commands:
+	-- "-Bd" -- Creates directory with tar file and 
+	default 'pkginfo.json' and 'compile.sh'
+		-- Dialog for pkginfo.json information
+		collection
+		-- Default 'compile.sh'
+			#!/bin/bash
+			./configure
+			make
+
+TODO:
+	Enable creation of package listing without
+	requiring that that package is installed;
+
+	This way we cann associate files with a
+	listing when a package does not use make install
+
+
+Install Process:
+	-- Extract files
+	-- Run compile.sh
+	-- Install to fakeroot
+	-- Run postfake.sh
+	-- Install to true root
+	-- Run postfake.sh on true root
+	-- Run postinstall.sh
+	-- Exit
