@@ -18,8 +18,10 @@ class unbuiltPkgInfo:
         self.installOpts = []
         print("[Build] Setting envar to 'DESTDIR'")
         self.envar = "DESTDIR"
-        print("[Build] Setting 'from_builddir' to False")
+        print("[Build] Setting 'from_builddir' to false")
         self.frombuilddir = "false"
+        print("[Build] Setting 'run_makeinstall' to true")
+        self.runMakeInstall = "true"
 
     def getName(self):
         return input("[Build] Enter the name of the package: ")
@@ -82,6 +84,7 @@ def mkDefaultJson(pkgInfo):
     rtrnVal += '\t"dependencies":'+ str(pkgInfo.dependencies).replace("'", '"') + ',\n'
     rtrnVal += '\t"install_options":' + str(pkgInfo.installOpts) + ',\n'
     rtrnVal += '\t"from_builddir":' + pkgInfo.frombuilddir + ',\n'
+    rtrnVal += '\t"run_makeinstall":' + pkgInfo.runMakeInstall + ',\n'
     rtrnVal += '\t"envar":"' + pkgInfo.envar + '"\n'
 
     return rtrnVal + "}"
