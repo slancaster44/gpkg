@@ -164,8 +164,6 @@ def mkInstallCmd(pkg, fkrootLocation):
 def handleFailedScript(scriptName, retCode):
     print("[Build] Script returned non-zero value ("+str(retCode)+"): " + scriptName)
     Utils.shouldContinue()
-    if shouldContinue != 'Y' and shouldContinue != 'y':
-        sys.exit(1)
     
 def openPkgTarball(pkg):
     oldContents = pkg.dirContents

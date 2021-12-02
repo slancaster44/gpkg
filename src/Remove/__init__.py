@@ -44,10 +44,8 @@ def remove(pkgName):
 
 def handleFailedRemoval(itemName):
     print("[Remove] Could not delete item '" + itemName + "'")
-    shouldContinue = input("\tShould removal process continue? [y/N] ")
+    Utils.shouldContinue()
 
-    if shouldContinue != "y" and shouldContinue != "Y":
-        sys.exit(1)
 
 def removeOrphaned():
     orphaned = List.listOrphanedDepends()
