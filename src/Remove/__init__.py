@@ -3,6 +3,7 @@ import sys
 
 import List
 from Depends import installedDepends
+import Utils
 
 def remove(pkgName):
     pkgListing = List.findPkg(pkgName)

@@ -63,9 +63,9 @@ def checkJson(jsonFileLocation):
         if not i in jsonContents.keys():
             sys.exit("[Build] 'pkginfo.json' must contain key '" + i + "'")
 
-    itemsThatShouldBeStrings = ['name', 'version', 'description', 'envar']
+    itemsThatShouldBeStrings = ['name', 'version', 'description', 'envar', 'from_builddir']
     itemsThatShouldBeLists = ['install_options', 'dependencies']
-    itemsThatShouldBeBools = ['from_builddir', 'run_makeinstall']
+    itemsThatShouldBeBools = ['run_makeinstall']
 
     ## Type check items in 'pkginfo.json'
     for i in itemsThatShouldBeStrings:

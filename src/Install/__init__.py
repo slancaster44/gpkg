@@ -108,8 +108,8 @@ def installPkgToTrueRoot(pkg):
     extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
     os.chdir(extractedDir)
-    if pkg.installFromBuildDir:
-        os.chdir(extractedDir + "/build")
+    if pkg.installFromBuildDir != "":
+        os.chdir(extractedDir + "/" + pkg.installFromBuildDir)
 
     cmd = mkInstallCmd(pkg, "/")
     
@@ -127,8 +127,8 @@ def installPkgToFakeRoot(pkg, fkrtlocation):
         symlinks=True, ignore_dangling_symlinks=True)
 
     os.chdir(extractedDirCopy)
-    if pkg.installFromBuildDir:
-        os.chdir(extractedDirCopy + "/build")
+    if pkg.installFromBuildDir != "":
+        os.chdir(extractedDirCopy + "/"+ pkg.installFromBuildDir)
 
     cmd = mkInstallCmd(pkg, fkrtlocation)
     returnCode = subprocess.run(cmd).returncode
