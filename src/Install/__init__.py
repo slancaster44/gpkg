@@ -46,7 +46,8 @@ def installFromFile(pkgLocation):
     print("[Install] Opening '.dmi' file")
     unTarPkg(pkgLocation)
 
-    pkgObj = package.package(getPkgDirLocation())
+    pkgLocation = getPkgDirLocation()
+    pkgObj = package.package(pkgLocation)
     if List.findPkg(pkgObj.name) != None:
         sys.exit("[Install] Package is already installed: " + pkgObj.name)
 
@@ -57,7 +58,7 @@ def installFromFile(pkgLocation):
     openPkgTarball(pkgObj)
 
     print("[Install] Running 'compile.sh'")
-    extractedDir = getPkgDirLocation() + "/" + pkgObj.extractedContents[0]
+    extractedDir = pkgLocation + "/" + pkgObj.extractedContents[0]
     runPkgCompileSh(pkgObj, extractedDir)
 
     print("[Install] Installing to fakeroot")
