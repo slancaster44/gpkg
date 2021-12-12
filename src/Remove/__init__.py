@@ -11,7 +11,7 @@ def remove(pkgName):
         sys.exit("[Remove] Cannot remove package that is not installed: '" + pkgName + "'")
     
     #Ensure that no installed programs depend on the program
-    dependsTree =installedDepends.getDependsTree()
+    dependsTree = installedDepends.getDependsTree()
     numberOfDependentPkgs = dependsTree.numberOfPkgsThatDependOn(pkgName)
 
     if numberOfDependentPkgs != 0:
@@ -21,6 +21,9 @@ def remove(pkgName):
     filesToBeRemoved = sorted(pkgListing.fakeRootMap.files, key=lambda dir: dir.count('/'), reverse=True)
     dirsToBeRemoved = sorted(pkgListing.fakeRootMap.dirs, key=lambda dir: dir.count('/'), reverse=True)
 
+
+    filesToBeRemoved = [x for x in filesToBeRemoved if not len(List.pkgsAssociatedWith(x)) <= 1]
+    dirsToBeRemoved = [x for x in filesToBeRemoved if not len(List.pkgsAssociatedWith(x)) <= 1]
 
     for i in filesToBeRemoved:
         try:

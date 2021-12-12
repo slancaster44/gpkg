@@ -51,12 +51,7 @@ Build Tool Commands:
 			make
 
 TODO:
-	Enable creation of package listing without
-	requiring that that package is installed;
-
-	This way we cann associate files with a
-	listing when a package does not use make install
-
+	Check depends before install of *.dmi file
 
 Install Process:
 	-- Extract files

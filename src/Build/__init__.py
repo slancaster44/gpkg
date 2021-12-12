@@ -37,7 +37,10 @@ def checkContents(dir):
     if len(listOfCompileScripts) > 1:
         sys.exit("[Build] Can only build package that contains one 'compile.sh'")
 
-    #TODO only one postfake & postinstall too
+    dirContents = os.listdir(dir)
+    for i in dirContents:
+        if os.path.isdir(dir + "/" + i):
+            sys.exit("[Build] Package may not contain any directories; only tarballs and install scripts")
 
     listOfPkgInfoJsons = Utils.findPkgInfosIn(dir)
     if len(listOfPkgInfoJsons) != 1:
@@ -82,6 +85,7 @@ def checkJson(jsonFileLocation):
         item = jsonContents[i]
         if not isinstance(item, bool) and item != None:
             sys.exit("[Build] Variable in 'pkginfo.json' must be stored as list: " + i)
+
 
 def checkTarball(tarball):
     ##Ensure that tarball contains 1 upper level directory

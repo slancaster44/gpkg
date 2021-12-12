@@ -9,7 +9,7 @@ class FakerootMap:
         self.dirs = []
 
     def __str__(self):
-        out = "--Files to Be Installed--"
+        out = "--Files to Be Installed--\n"
         for i in self.files:
             out += i + "\n"
 

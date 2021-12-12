@@ -61,6 +61,21 @@ def loadAllPkgs():
 
     return setOfAllPkgs
 
+def pkgsAssociatedWith(path):
+    path = os.path.abspath(path)
+
+    allPkgs = loadAllPkgs()
+
+    pkgs = []
+    for i in allPkgs:
+        if path in i.fakeRootMap.dirs:
+            pkgs.append(i)
+        elif path in i.fakeRootMap.files:
+            pkgs.append(i)
+
+    return pkgs
+
+
 def saveListingOn(pkgdata):
     print("[List] Creating listing for: " + pkgdata.name)
     Utils.ensureLibDmi()

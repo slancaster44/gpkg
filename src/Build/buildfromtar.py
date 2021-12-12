@@ -19,7 +19,7 @@ class unbuiltPkgInfo:
         print("[Build] Setting envar to 'DESTDIR'")
         self.envar = "DESTDIR"
         print("[Build] Setting 'from_builddir' to ''")
-        self.frombuilddir = "''"
+        self.frombuilddir = '""'
         print("[Build] Setting 'run_makeinstall' to true")
         self.runMakeInstall = "true"
 

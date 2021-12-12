@@ -50,6 +50,9 @@ def installFromFile(pkgLocation):
     if List.findPkg(pkgObj.name) != None:
         sys.exit("[Install] Package is already installed: " + pkgObj.name)
 
+    print("[Install] Check dependencies")
+    checkDepends(pkgObj)
+
     print("[Install] Opening source code tarball")
     openPkgTarball(pkgObj)
 
@@ -57,6 +60,13 @@ def installFromFile(pkgLocation):
     runPkgCompileSh(pkgObj)
 
     print("[Install] Installing to fakeroot")
+    print("[Install] Creating copy of tarball files...")
+
+    extractedDirCopy = pkgObj.extractedContents[0] + ".copy.d"
+    shutil.copytree(pkgObj.extractedContents[0], extractedDirCopy,  
+        symlinks=True, ignore_dangling_symlinks=True)
+
+    os.chdir(extractedDirCopy)
     fakeRootLoc = mkFakeroot(pkgObj)
 
     if pkgObj.runMakeInstall:
@@ -73,6 +83,8 @@ def installFromFile(pkgLocation):
     Utils.shouldContinue()
 
     print("[Install] Installing to trueroot")
+    os.chdir(pkgObj.extractedContents[0])
+
     if pkgObj.runMakeInstall:
         installPkgToTrueRoot(pkgObj)
         
@@ -105,11 +117,7 @@ def mkFakeroot(pkgObj):
     return fakeRootLoc
 
 def installPkgToTrueRoot(pkg):
-    extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
-
-    os.chdir(extractedDir)
-    if pkg.installFromBuildDir != "":
-        os.chdir(extractedDir + "/" + pkg.installFromBuildDir)
+    extractedDir = os.curdir()
 
     cmd = mkInstallCmd(pkg, "/")
     
@@ -119,18 +127,14 @@ def installPkgToTrueRoot(pkg):
         handleFailedScript(str(cmd), returnCode)
 
 def installPkgToFakeRoot(pkg, fkrtlocation):
-    extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
+    extractedDir = os.curdir()
 
-    print("[Install] Creating copy of tarball files...")
-    extractedDirCopy = extractedDir + ".copy.d"
-    shutil.copytree(extractedDir, extractedDirCopy,  
-        symlinks=True, ignore_dangling_symlinks=True)
-
-    os.chdir(extractedDirCopy)
+    
     if pkg.installFromBuildDir != "":
-        os.chdir(extractedDirCopy + "/"+ pkg.installFromBuildDir)
+        os.chdir(extractedDir + "/"+ pkg.installFromBuildDir)
 
     cmd = mkInstallCmd(pkg, fkrtlocation)
+
     returnCode = subprocess.run(cmd).returncode
     if returnCode != 0:
         handleFailedScript(str(cmd), returnCode)
@@ -248,3 +252,10 @@ def installWithDepends(pkgName):
     print("[Install] Logging dependencies:", pkgName, "--", depends)
 
     installedDepends.addToDependsTree(pkgName, depends)
+
+def checkDepends(pkgObj):
+    for i in pkgObj.dependencies:
+        if not List.isInstalled(i):
+            print("[Install] Could not find dependency: " + i)
+            Utils.shouldContinue()
+
