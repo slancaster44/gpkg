@@ -67,7 +67,7 @@ def installFromFile(pkgLocation):
     extractedDirCopy = pkgObj.extractedContents[0] + ".copy.d"
     print("IMPORTANT", extractedDir, extractedDirCopy)
 
-    shutil.copytree(pkgObj.extractedContents[0], extractedDirCopy,  
+    shutil.copytree(extractedDir, extractedDirCopy,  
         symlinks=True, ignore_dangling_symlinks=True)
 
     os.chdir(extractedDirCopy)
