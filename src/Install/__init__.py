@@ -55,15 +55,14 @@ def installFromFile(pkgLocation):
 
     print("[Install] Opening source code tarball")
     openPkgTarball(pkgObj)
-    os.chdir(pkgObj.directory)
 
     print("[Install] Running 'compile.sh'")
-    runPkgCompileSh(pkgObj)
+    extractedDir = os.path.abspath(pkgObj.extractedContents[0])
+    runPkgCompileSh(pkgObj, extractedDir)
 
     print("[Install] Installing to fakeroot")
     print("[Install] Creating copy of tarball files...")
 
-    extractedDir = os.path.abspath(pkgObj.extractedContents[0])
     extractedDirCopy = pkgObj.extractedContents[0] + ".copy.d"
     print("IMPORTANT", extractedDir, extractedDirCopy)
 
@@ -77,7 +76,7 @@ def installFromFile(pkgLocation):
         installPkgToFakeRoot(pkgObj, fakeRootLoc)
 
     print("[Install] Running postfake.sh")
-    runPkgPostFakeSh(pkgObj, fakeRootLoc)
+    runPkgPostFakeSh(pkgObj, fakeRootLoc, extractedDirCopy)
 
     print("[Install] Mapping fakeroot")
     fkrtMap = fakerootMapper.mapFakeroot(fakeRootLoc)
@@ -92,7 +91,7 @@ def installFromFile(pkgLocation):
     if pkgObj.runMakeInstall:
         installPkgToTrueRoot(pkgObj)
         
-    runPkgPostFakeSh(pkgObj, "/") 
+    runPkgPostFakeSh(pkgObj, "/", extractedDir) 
 
     print("[Install] Running 'postinstall.sh'")
     runPkgPostInstallSh(pkgObj)
@@ -121,7 +120,10 @@ def mkFakeroot(pkgObj):
     return fakeRootLoc
 
 def installPkgToTrueRoot(pkg):
-    extractedDir = os.curdir()
+    extractedDir = os.path.abspath(os.curdir)
+
+    if pkg.installFromBuildDir != "":
+        os.chdir(extractedDir + "/"+ pkg.installFromBuildDir)
 
     cmd = mkInstallCmd(pkg, "/")
     
@@ -131,8 +133,7 @@ def installPkgToTrueRoot(pkg):
         handleFailedScript(str(cmd), returnCode)
 
 def installPkgToFakeRoot(pkg, fkrtlocation):
-    extractedDir = os.curdir()
-
+    extractedDir = os.path.abspath(os.curdir)
     
     if pkg.installFromBuildDir != "":
         os.chdir(extractedDir + "/"+ pkg.installFromBuildDir)
@@ -188,10 +189,10 @@ def openPkgTarball(pkg):
                                         #have the same name as an old one,
                                         #it gets counted as an extracted item
 
-def runSh(pkg, scriptName, args=[]):
+def runSh(pkg, scriptName, cwd, args=[]):
     extractedDir = pkg.directory + "/" + pkg.extractedContents[0]
 
-    os.chdir(extractedDir)
+    os.chdir(cwd)
     scriptLocation = extractedDir + "/" + os.path.basename(scriptName)
     shutil.copyfile(scriptName, scriptLocation)
 
@@ -207,24 +208,24 @@ def runSh(pkg, scriptName, args=[]):
         handleFailedScript(scriptName, returnCode)
 
 
-def runPkgCompileSh(pkg):
+def runPkgCompileSh(pkg, cwd):
     if pkg.compileShLoc == None:
         print("\tNo 'compile.sh' to run")
     else:
-        runSh(pkg, pkg.compileShLoc)
+        runSh(pkg, pkg.compileShLoc, cwd)
     
 
-def runPkgPostInstallSh(pkg):
+def runPkgPostInstallSh(pkg, cwd):
     if pkg.postInstallShLoc == None:
         print("\tNo 'postinstall.sh' to run")
     else:
-        runSh(pkg, pkg.postInstallShLoc)
+        runSh(pkg, pkg.postInstallShLoc, cwd)
 
-def runPkgPostFakeSh(pkg, postFakeLoc):
+def runPkgPostFakeSh(pkg, postFakeLoc, cwd):
     if pkg.postFakeShLoc == None:
         print("\tNo 'postfake.sh' to run")
     else:
-        runSh(pkg, pkg.postFakeShLoc, args=[postFakeLoc])
+        runSh(pkg, pkg.postFakeShLoc, cwd, args=[postFakeLoc])
 
 def installWithDepends(pkgName):
     print("[Install] Resolving dependencies for:", pkgName)
