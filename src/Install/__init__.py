@@ -63,7 +63,10 @@ def installFromFile(pkgLocation):
     print("[Install] Installing to fakeroot")
     print("[Install] Creating copy of tarball files...")
 
+    extractedDir = os.path.abspath(pkgObj.extractedContents[0])
     extractedDirCopy = pkgObj.extractedContents[0] + ".copy.d"
+    print("IMPORTANT", extractedDir, extractedDirCopy)
+
     shutil.copytree(pkgObj.extractedContents[0], extractedDirCopy,  
         symlinks=True, ignore_dangling_symlinks=True)
 
@@ -84,7 +87,7 @@ def installFromFile(pkgLocation):
     Utils.shouldContinue()
 
     print("[Install] Installing to trueroot")
-    os.chdir(pkgObj.extractedContents[0])
+    os.chdir(extractedDir)
 
     if pkgObj.runMakeInstall:
         installPkgToTrueRoot(pkgObj)
