@@ -55,6 +55,7 @@ def installFromFile(pkgLocation):
 
     print("[Install] Opening source code tarball")
     openPkgTarball(pkgObj)
+    os.chdir(pkgObj.directory)
 
     print("[Install] Running 'compile.sh'")
     runPkgCompileSh(pkgObj)
