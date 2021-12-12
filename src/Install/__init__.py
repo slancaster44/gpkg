@@ -57,7 +57,7 @@ def installFromFile(pkgLocation):
     openPkgTarball(pkgObj)
 
     print("[Install] Running 'compile.sh'")
-    extractedDir = os.path.abspath(pkgObj.extractedContents[0])
+    extractedDir = getPkgDirLocation() + "/" + pkgObj.extractedContents[0]
     runPkgCompileSh(pkgObj, extractedDir)
 
     print("[Install] Installing to fakeroot")
