@@ -59,12 +59,13 @@ def installFromFile(pkgLocation):
 
     print("[Install] Running 'compile.sh'")
     extractedDir = pkgLocation + "/" + pkgObj.extractedContents[0]
+    print(extractedDir)
     runPkgCompileSh(pkgObj, extractedDir)
 
     print("[Install] Installing to fakeroot")
     print("[Install] Creating copy of tarball files...")
 
-    extractedDirCopy = pkgObj.extractedContents[0] + ".copy.d"
+    extractedDirCopy = extractedDir + ".copy.d"
     print("IMPORTANT", extractedDir, extractedDirCopy)
 
     shutil.copytree(extractedDir, extractedDirCopy,  
