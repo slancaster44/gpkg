@@ -96,7 +96,7 @@ def installFromFile(pkgLocation):
     runPkgPostFakeSh(pkgObj, "/", extractedDir) 
 
     print("[Install] Running 'postinstall.sh'")
-    runPkgPostInstallSh(pkgObj)
+    runPkgPostInstallSh(pkgObj, extractedDir)
     
     pkgData = PkgMetadata.pkgMetadata(pkgObj.pkgInfoContents, fkrtMap)
     List.saveListingOn(pkgData)
