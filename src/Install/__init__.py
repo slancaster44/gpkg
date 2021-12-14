@@ -66,7 +66,6 @@ def installFromFile(pkgLocation):
     print("[Install] Creating copy of tarball files...")
 
     extractedDirCopy = extractedDir + ".copy.d"
-    print("IMPORTANT", extractedDir, extractedDirCopy)
 
     shutil.copytree(extractedDir, extractedDirCopy,  
         symlinks=True, ignore_dangling_symlinks=True)
@@ -125,7 +124,11 @@ def installPkgToTrueRoot(pkg):
     extractedDir = os.path.abspath(os.curdir)
 
     if pkg.installFromBuildDir != "":
-        os.chdir(extractedDir + "/"+ pkg.installFromBuildDir)
+        buildpath = extractedDir + "/" + pkg.installFromBuildDir
+        if not os.path.exists(buildpath):
+            os.makedirs(buildpath)
+
+        os.chdir(buildpath)
 
     cmd = mkInstallCmd(pkg, "/")
     
@@ -138,7 +141,11 @@ def installPkgToFakeRoot(pkg, fkrtlocation):
     extractedDir = os.path.abspath(os.curdir)
     
     if pkg.installFromBuildDir != "":
-        os.chdir(extractedDir + "/"+ pkg.installFromBuildDir)
+        buildpath = extractedDir + "/" + pkg.installFromBuildDir
+        if not os.path.exists(buildpath):
+            os.makedirs(buildpath)
+
+        os.chdir(buildpath)
 
     cmd = mkInstallCmd(pkg, fkrtlocation)
 
